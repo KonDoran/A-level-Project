@@ -3,7 +3,6 @@ import random
 import os
 
 
-
 current_path = os.path.dirname(__file__)#where this file is located
 image_path = os.path.join(current_path, 'images')
 # Define some colors
@@ -14,19 +13,18 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 PINK = (255,20,147)
 PURPLE = (75,0,130)
-
-#initiate pygame
+BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'background.png'))
 pygame.init()
 
 # Set the width and height of the screen [width, height]
-size = (1280, 720)
+size = (1200, 1000)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("A level Project")
+pygame.display.set_caption("Tile Movement Game")
 
 #Loop until the user clicks the close button.
 done = False
     
-# Used to manage how fast the screen updates
+    # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
     
 
@@ -34,14 +32,13 @@ clock = pygame.time.Clock()
 
 
 
-#Define the Game class which controls every other class and function
+
 class Game(object):
     def __init__(self):
-        #define attributes of the game class
         self.score = 0
         self.game_over = False
         self.level = 0
-        # Create a list of all sprite groups
+        # Create a list of all sprites
         self.all_sprites_group = pygame.sprite.Group()
         self.outsidewall_group = pygame.sprite.Group()
         self.wall_group = pygame.sprite.Group()
@@ -49,10 +46,8 @@ class Game(object):
         self.player_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
-        self.coin_group = pygame.sprite.Group()
+        self.key_group = pygame.sprite.Group()
         self.portal_group = pygame.sprite.Group()
-        self.melee_group = pygame.sprite.Group()
-        #define each level layout in the Game class constructor 
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -138,24 +133,21 @@ class Game(object):
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         
-            ] 
-        # Create an array that stores each level           
+            ]            
         self.levels = [self.level1, self.level2, self.level3]
-        #run the setup function for the levels
         self.levelsetup()
-        #end function
+        
 
-    #define the level setup function to generate each level    
+        
     def levelsetup(self):
         enemies = 0
-        #loop to create enemies in random positions in each level but not inside the player or walls
         while enemies != ((2*(self.level+1)) + 1):
             xpos = random.randint(1,23)
             ypos = random.randint(1,23)
             if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
                 self.levels[self.level][xpos][ypos] = 4
                 enemies = enemies +1
-        #level creation by reading through array
+
         for j in range(len(self.levels[self.level])):
             for i in range(len(self.levels[self.level][j])):
                 #print(i,j)
@@ -178,10 +170,8 @@ class Game(object):
                     self.enemy = Enemy(random.randint(0,10),40,40, i*40, j*40, 40)
                     self.all_sprites_group.add(self.enemy)
                     self.enemy_group.add(self.enemy)
-        #end procedure
 
 
-    #define level delete procedure
     def leveldelete(self):
         self.all_sprites_group.empty()
         self.wall_group.empty()
@@ -195,42 +185,33 @@ class Game(object):
                 return True
         return False            
 
-    #data hiding function to get the score
+
     def getscore(self):
         return self.score
     #endprocess
 
-
-    # function to run all the logic of the game
     def runlogic(self):
         if not self.game_over:
-            # update sprite movement when game is running
+            # Move all the sprites
             self.all_sprites_group.update()
-            #when the player is deleted then the game should stop
             if len(self.player_group) == 0:
                 self.game_over = True
-            #endif
-            #check if a portal has been touched by the player to change level
             portal_hit = pygame.sprite.groupcollide(self.portal_group, self.player_group, True, True)
             for self.portal in portal_hit:
-                #check this is not the last level and if not change the level
                 if self.level != (len(self.levels)-1):
                     self.level += 1
                     self.score += (self.player.health*100)+100
                     self.leveldelete()
                     self.levelsetup()
                 else:
-                    #if the game is over add points to the players score and then stop the game
                     self.score += (self.player.health*100)+100
                     self.game_over = True
-                #endif
-    #end procedure
 
-    #define function to display everything on the screen
+
     def display(self, screen):
         # background image.
         screen.fill(BLACK)
-        # define game over screen
+        #screen.blit(BACKGROUND_IMAGE,(0,0))
         if self.game_over:
             screen.fill(BLACK)
             font1 = pygame.font.Font(None, 74)
@@ -239,7 +220,6 @@ class Game(object):
             score = font2.render('SCORE:'+str(self.getscore()), 1, WHITE)
             screen.blit(text, (440,300))
             screen.blit(score, (520,500))
-        # define screen when game is running
         if not self.game_over:
             font = pygame.font.Font(None, 24)
             health = font.render('HEALTH:'+str(self.player.gethealth()), 1, WHITE)
@@ -250,14 +230,21 @@ class Game(object):
             screen.blit(score, (1050,500))
             screen.blit(money, (1050,550))
             screen.blit(keys, (1050,600))
-            # --- Drawing all sprites
+            # --- Drawing code should go here
             self.all_sprites_group.draw(screen)
             #endif
-        # update the screen with what we've drawn
+        # --- Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
     #end procedure
-
-
+        
+        
+        
+        
+        
+        
+        
+        
+# Create a Player Class
 class Player(pygame.sprite.Sprite):
     #define the constructor for the player
     speed_x = 0
@@ -266,7 +253,8 @@ class Player(pygame.sprite.Sprite):
         #call sprite constructor
         super().__init__()
         #create a sprite
-        self.image = pygame.image.load(os.path.join(image_path, 'player.png'))
+        self.image = pygame.Surface([width,height])
+        self.image.fill(color)
         #set the position of the sprite
         self.rect = self.image.get_rect()
         self.health = health
@@ -379,7 +367,8 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, color, speedx, speedy):
         #Call the sprite constructor
         super().__init__()
-        self.image = pygame.image.load(os.path.join(image_path, 'fireball.png'))
+        self.image = pygame.Surface([6,4])
+        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.speedx = speedx
         self.speedy = speedy
@@ -397,7 +386,8 @@ class Bullet(pygame.sprite.Sprite):
 class Key(pygame.sprite.Sprite):
     def __init__(self,color,x,y):
         super().__init__()
-        self.image = pygame.image.load(os.path.join(image_path, 'silverkey.png'))
+        self.image = pygame.Surface([10,10])
+        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.y = y
         self.rect.x = x
@@ -419,7 +409,8 @@ class Key(pygame.sprite.Sprite):
 class Portal(pygame.sprite.Sprite):
     def __init__(self,color,x,y):
         super().__init__()
-        self.image = pygame.image.load(os.path.join(image_path, 'portal2.png'))
+        self.image = pygame.Surface([40,40])
+        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.y = y
         self.rect.x = x
@@ -432,7 +423,8 @@ class Wall(pygame.sprite.Sprite):
         #call sprite constructor
         super().__init__()
         #create a sprite
-        self.image = pygame.image.load(os.path.join(image_path, 'wall.png'))
+        self.image = pygame.Surface([width,height])
+        self.image.fill(color)
         #set the position of the sprite
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -461,7 +453,8 @@ class Enemy(pygame.sprite.Sprite):
         #call sprite constructor
         super().__init__()
         #create a sprite
-        self.image = pygame.image.load(os.path.join(image_path, 'enemy.png'))
+        self.image = pygame.Surface([width,height])
+        self.image.fill(YELLOW)
         #set the position of the sprite
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -543,5 +536,5 @@ while not done:
     
     # Close the window and quit.
 pygame.quit()
-       
-        
+
+  
