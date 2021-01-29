@@ -62,9 +62,9 @@ class Game(object):
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,5],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
             [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,5],
-            [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,5],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -93,8 +93,7 @@ class Game(object):
             [1,0,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
             [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
             [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,5],
-            [1,0,0,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,2,0,0,1],
-            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [5,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,5],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
             [1,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
@@ -122,7 +121,7 @@ class Game(object):
             [1,2,0,0,2,2,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
             [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
             [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,1],
-            [1,0,0,0,0,2,0,0,2,2,2,0,0,2,2,2,0,0,0,0,0,2,0,0,1],
+            [5,0,0,0,0,2,0,0,2,2,2,0,0,2,2,2,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,1],
             [1,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
@@ -138,18 +137,20 @@ class Game(object):
             ]            
         self.levels = [self.level1, self.level2, self.level3]
         self.levelsetup()
-        
+        self.player = Player(WHITE, 40, 40,40,500,100,0,0,0)
+        self.all_sprites_group.add(self.player)
+        self.player_group.add(self.player)
 
         
     def levelsetup(self):
+    
         enemies = 0
-        if self.levelcomplete[self.level] == False:
-            while enemies != ((2*(self.level+1)) + 1):
-                xpos = random.randint(1,23)
-                ypos = random.randint(1,23)
-                if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
-                    self.levels[self.level][xpos][ypos] = 4
-                    enemies = enemies +1
+        while enemies != ((2*(self.level+1)) + 1):
+            xpos = random.randint(1,23)
+            ypos = random.randint(1,23)
+            if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
+                self.levels[self.level][xpos][ypos] = 4
+                enemies = enemies +1
 
         for j in range(len(self.levels[self.level])):
             for i in range(len(self.levels[self.level][j])):
@@ -165,28 +166,27 @@ class Game(object):
                     self.all_sprites_group.add(self.innerwall)
                     self.wall_group.add(self.innerwall)
                     self.innerwall_group.add(self.innerwall)
-                if char == 3:
-                    self.player = Player(WHITE, 40, 40,i*40,j*40,100,0,0,0)
-                    self.all_sprites_group.add(self.player)
-                    self.player_group.add(self.player)
+                #if char == 3:
+                    #self.player = Player(WHITE, 40, 40,i*40,j*40,100,0,0,0)
+                    #self.all_sprites_group.add(self.player)
+                    #self.player_group.add(self.player)
                 if char == 4:
-                    self.enemy = Enemy(random.randint(0,10),40,40, i*40, j*40, 40)
-                    self.all_sprites_group.add(self.enemy)
-                    self.enemy_group.add(self.enemy)
+                    if self.levelcomplete[self.level] == False:
+                        self.enemy = Enemy(random.randint(0,10),40,40, i*40, j*40, 40)
+                        self.all_sprites_group.add(self.enemy)
+                        self.enemy_group.add(self.enemy)
                 if char == 5:
-                    self.door = Door(PURPLE,40,40,i*40, j*40, i, j)
-                    self.all_sprites_group.add(self.door)
-                    self.wall_group.add(self.door)
-                    self.door_group.add(self.door)
+                    if self.levelcomplete[self.level] == False:
+                        self.door = Door(PURPLE,40,40,i*40, j*40, i, j)
+                        self.all_sprites_group.add(self.door)
+                        self.wall_group.add(self.door)
+                        self.door_group.add(self.door)
 
     def leveldelete(self):
         self.all_sprites_group.empty()
         self.wall_group.empty()
         self.enemy_group.empty()
         self.all_sprites_group.add(self.player)
-        self.player.gamekeys = 0
-        self.player.rect.x = 40
-        self.player.rect.y = 500
         self.all_sprites_group.update()
 
     #endprocess
@@ -203,6 +203,7 @@ class Game(object):
 
     def runlogic(self):
         if not self.game_over:
+            print(self.levelcomplete)
             # Move all the sprites
             self.all_sprites_group.update()
             if len(self.player_group) == 0:
@@ -214,18 +215,18 @@ class Game(object):
                     self.level += 1
                     self.player.gamekeys = 0
                     self.player.rect.x = 40
-                    self.player.rect.y = 500
-                    self.score += (self.player.health*100)+100
                     self.leveldelete()
                     self.levelsetup()
                 else:
                     self.score += (self.player.health*100)+100
                     self.game_over = True
+                    
             elif self.player.rect.x < 0:
+                self.levelcomplete[self.level] = True
+                print(self.levelcomplete)
                 self.level -= 1
                 self.leveldelete()
                 self.player.rect.x = 960
-                self.player.rect.y = 500
                 self.levelsetup()
                 
 
