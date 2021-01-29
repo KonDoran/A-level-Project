@@ -49,7 +49,7 @@ class Game(object):
         self.key_group = pygame.sprite.Group()
         self.portal_group = pygame.sprite.Group()
         self.door_group = pygame.sprite.Group()
-        self.level1complete = False
+        self.levelcomplete = [True, False, False]
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -143,12 +143,13 @@ class Game(object):
         
     def levelsetup(self):
         enemies = 0
-        while enemies != ((2*(self.level+1)) + 1):
-            xpos = random.randint(1,23)
-            ypos = random.randint(1,23)
-            if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
-                self.levels[self.level][xpos][ypos] = 4
-                enemies = enemies +1
+        if self.levelcomplete[self.level] == False:
+            while enemies != ((2*(self.level+1)) + 1):
+                xpos = random.randint(1,23)
+                ypos = random.randint(1,23)
+                if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
+                    self.levels[self.level][xpos][ypos] = 4
+                    enemies = enemies +1
 
         for j in range(len(self.levels[self.level])):
             for i in range(len(self.levels[self.level][j])):
