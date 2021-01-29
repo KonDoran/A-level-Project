@@ -91,8 +91,8 @@ class Game(object):
             [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,1],
             [1,0,0,0,0,0,2,0,2,2,2,2,2,2,2,2,0,2,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,1],
+            [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
+            [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,5],
             [1,0,0,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
@@ -120,8 +120,8 @@ class Game(object):
             [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,1],
             [1,0,0,0,0,0,2,0,2,2,2,2,2,2,2,2,0,2,0,0,0,0,0,0,1],
             [1,2,0,0,2,2,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,2,0,0,1],
-            [1,2,2,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,1],
+            [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,1],
             [1,0,0,0,0,2,0,0,2,2,2,0,0,2,2,2,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,1],
@@ -183,6 +183,10 @@ class Game(object):
         self.all_sprites_group.empty()
         self.wall_group.empty()
         self.enemy_group.empty()
+        self.all_sprites_group.add(self.player)
+        self.player.gamekeys = 0
+        self.player.rect.x = 40
+        self.player.rect.y = 500
         self.all_sprites_group.update()
 
     #endprocess
@@ -206,13 +210,24 @@ class Game(object):
             
             if self.player.rect.x > 1000:
                 if self.level != (len(self.levels)-1):
+                    self.levelcomplete[self.level] = True
                     self.level += 1
+                    self.player.gamekeys = 0
+                    self.player.rect.x = 40
+                    self.player.rect.y = 500
                     self.score += (self.player.health*100)+100
                     self.leveldelete()
                     self.levelsetup()
                 else:
                     self.score += (self.player.health*100)+100
                     self.game_over = True
+            elif self.player.rect.x < 0:
+                self.level -= 1
+                self.leveldelete()
+                self.player.rect.x = 960
+                self.player.rect.y = 500
+                self.levelsetup()
+                
 
 
     def display(self, screen):
