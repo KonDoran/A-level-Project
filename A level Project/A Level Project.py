@@ -49,7 +49,7 @@ class Game(object):
         self.key_group = pygame.sprite.Group()
         self.portal_group = pygame.sprite.Group()
         self.door_group = pygame.sprite.Group()
-        self.levelcomplete = [True, False, False]
+        self.levelcomplete = [False, False, False]
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -203,8 +203,8 @@ class Game(object):
             self.all_sprites_group.update()
             if len(self.player_group) == 0:
                 self.game_over = True
-            portal_hit = pygame.sprite.groupcollide(self.portal_group, self.player_group, True, True)
-            for self.portal in portal_hit:
+            
+            if self.player.rect.x > 1000:
                 if self.level != (len(self.levels)-1):
                     self.level += 1
                     self.score += (self.player.health*100)+100
@@ -404,10 +404,7 @@ class Key(pygame.sprite.Sprite):
         for self in key_hit_group:
             game.player.gamekeys += 1
             game.score += 50
-            if  game.player.gamekeys == ((2*(game.level+1)) + 1):
-                game.portal = Portal(PURPLE, 23*40, 23*40)
-                game.all_sprites_group.add(game.portal)
-                game.portal_group.add(game.portal)
+            
 
 
 
@@ -466,6 +463,10 @@ class Door(pygame.sprite.Sprite):
         self.positionx = posx
         self.positiony = posy
     #end procedure
+
+    def update(self):
+        if  game.player.gamekeys == ((2*(game.level+1)) + 1):
+            self.kill()
 
 
 
