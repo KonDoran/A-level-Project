@@ -48,6 +48,8 @@ class Game(object):
         self.enemy_group = pygame.sprite.Group()
         self.key_group = pygame.sprite.Group()
         self.portal_group = pygame.sprite.Group()
+        self.door_group = pygame.sprite.Group()
+        self.level1complete = False
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -60,8 +62,8 @@ class Game(object):
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,5],
+            [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,5],
             [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -170,7 +172,11 @@ class Game(object):
                     self.enemy = Enemy(random.randint(0,10),40,40, i*40, j*40, 40)
                     self.all_sprites_group.add(self.enemy)
                     self.enemy_group.add(self.enemy)
-
+                if char == 5:
+                    self.door = Door(PURPLE,40,40,i*40, j*40, i, j)
+                    self.all_sprites_group.add(self.door)
+                    self.wall_group.add(self.door)
+                    self.door_group.add(self.door)
 
     def leveldelete(self):
         self.all_sprites_group.empty()
@@ -406,17 +412,17 @@ class Key(pygame.sprite.Sprite):
 
 
 
-class Portal(pygame.sprite.Sprite):
-    def __init__(self,color,x,y):
-        super().__init__()
-        self.image = pygame.Surface([40,40])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.y = y
-        self.rect.x = x
+#class Portal(pygame.sprite.Sprite):
+    #def __init__(self,color,x,y):
+        #super().__init__()
+        #self.image = pygame.Surface([40,40])
+        #self.image.fill(color)
+        #self.rect = self.image.get_rect()
+        #self.rect.y = y
+        #self.rect.x = x
     #end procedure    
-    def update(self):
-        pass
+    #def update(self):
+        #pass
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, color, width, height, x, y, posx, posy):
@@ -447,6 +453,21 @@ class InnerWall(Wall):
     def update(self):
         pass
         
+class Door(pygame.sprite.Sprite):
+    def __init__(self, color, width, height, x, y, posx, posy):
+        super().__init__()
+        self.image = pygame.Surface([width,height])
+        self.image.fill(color)
+        #set the position of the sprite
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.positionx = posx
+        self.positiony = posy
+    #end procedure
+
+
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, direction, width, height, x, y, health):
