@@ -50,6 +50,7 @@ class Game(object):
         self.key_group = pygame.sprite.Group()
         self.portal_group = pygame.sprite.Group()
         self.door_group = pygame.sprite.Group()
+        self.sword_group = pygame.sprite.Group()
         self.levelcomplete = [False, False, False]
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -331,8 +332,6 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-
-        print(pygame.time.get_ticks())
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.changespeed(-4,0)
@@ -357,7 +356,20 @@ class Player(pygame.sprite.Sprite):
                 game.bullet_group.add(bullet)
                 game.all_sprites_group.add(bullet)
                 self.previoustime = self.currenttime
+        if keys[pygame.K_e]:
+            if len(game.sword_group) == 0:
+                sword = Sword(GREEN)
+                game.sword_group.add(sword)
+                game.all_sprites_group.add(sword)
+                
+
+
         #end if
+
+
+
+
+
         self.move(self.speed_x,self.speed_y)
         self.speed_x = 0
         self.speed_y = 0
@@ -413,6 +425,26 @@ class Bullet(pygame.sprite.Sprite):
         if pygame.sprite.groupcollide(game.bullet_group, game.wall_group, True, False) == True:
             self.remove()
         
+
+class Sword(pygame.sprite.Sprite):
+    def __init__(self, color):
+        #call sprite constructor
+        super().__init__()
+        self.image = pygame.Surface([20,5])
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.y = game.player.rect.y + 18
+        self.rect.x = game.player.rect.x  + 40
+
+    def update(self):
+        self.rect.y = game.player.rect.y + 18
+        self.rect.x = game.player.rect.x  + 40
+        keys = pygame.key.get_pressed()
+        if not keys[pygame.K_e]:
+            self.kill()
+
+
+
 class Key(pygame.sprite.Sprite):
     def __init__(self,color,x,y):
         super().__init__()
@@ -513,16 +545,20 @@ class MeleeEnemy(pygame.sprite.Sprite):
     def update(self):
         
         self.MOVE()
-        enemy_hit_group = pygame.sprite.pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
-        for self in enemy_hit_group:
+        enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
+        for self in enemybullet_hit_group:
             self.health -= 20
             #print(self.health)
-            if self.health < 1:
-                game.score += 100
-                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
-                game.all_sprites_group.add(gamekey)
-                game.key_group.add(gamekey)
-                self.kill()
+        enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
+        for self in enemysword_hit_group:
+            self.health -= 4
+
+        if self.health < 1:
+            game.score += 100
+            gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+            game.all_sprites_group.add(gamekey)
+            game.key_group.add(gamekey)
+            self.kill()
                 
     #end procedure
 
@@ -582,17 +618,20 @@ class BowEnemy(pygame.sprite.Sprite):
     #end procedure
     def update(self):
         
-        enemy_hit_group = pygame.sprite.pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
-        for self in enemy_hit_group:
+        enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
+        for self in enemybullet_hit_group:
             self.health -= 20
             #print(self.health)
-            if self.health < 1:
-                game.score += 100
-                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
-                game.all_sprites_group.add(gamekey)
-                game.key_group.add(gamekey)
-                self.kill()
-                
+        enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
+        for self in enemysword_hit_group:
+            self.health -= 4   
+
+        if self.health < 1:
+            game.score += 100
+            gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+            game.all_sprites_group.add(gamekey)
+            game.key_group.add(gamekey)
+            self.kill()     
     #end procedure
     def gethealth(self):
         return self.health
