@@ -13,6 +13,7 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 PINK = (255,20,147)
 PURPLE = (75,0,130)
+ORANGE = (255,69,0)
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'background.png'))
 pygame.init()
 
@@ -149,7 +150,7 @@ class Game(object):
             xpos = random.randint(1,23)
             ypos = random.randint(1,23)
             if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
-                self.levels[self.level][xpos][ypos] = 4
+                self.levels[self.level][xpos][ypos] = random.randint(3,4)
                 enemies = enemies +1
 
         for j in range(len(self.levels[self.level])):
@@ -166,13 +167,14 @@ class Game(object):
                     self.all_sprites_group.add(self.innerwall)
                     self.wall_group.add(self.innerwall)
                     self.innerwall_group.add(self.innerwall)
-                #if char == 3:
-                    #self.player = Player(WHITE, 40, 40,i*40,j*40,100,0,0,0)
-                    #self.all_sprites_group.add(self.player)
-                    #self.player_group.add(self.player)
+                if char == 3:
+                    if self.levelcomplete[self.level] == False:
+                        self.enemy = BowEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
+                        self.all_sprites_group.add(self.enemy)
+                        self.enemy_group.add(self.enemy)
                 if char == 4:
                     if self.levelcomplete[self.level] == False:
-                        self.enemy = Enemy(random.randint(0,10),40,40, i*40, j*40, 40)
+                        self.enemy = MeleeEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
                         self.all_sprites_group.add(self.enemy)
                         self.enemy_group.add(self.enemy)
                 if char == 5:
@@ -487,7 +489,7 @@ class Door(pygame.sprite.Sprite):
 
 
 
-class Enemy(pygame.sprite.Sprite):
+class MeleeEnemy(pygame.sprite.Sprite):
     def __init__(self, direction, width, height, x, y, health):
         #call sprite constructor
         super().__init__()
@@ -558,6 +560,46 @@ class Enemy(pygame.sprite.Sprite):
     #endfunction
 
 
+class BowEnemy(pygame.sprite.Sprite):
+    def __init__(self, direction, width, height, x, y, health):
+        #call sprite constructor
+        super().__init__()
+        #create a sprite
+        self.image = pygame.Surface([width,height])
+        self.image.fill(ORANGE)
+        #set the position of the sprite
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.health = health
+        self.direction = direction
+        
+    #end procedure
+    def update(self):
+        
+        enemy_hit_group = pygame.sprite.pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
+        for self in enemy_hit_group:
+            self.health -= 20
+            #print(self.health)
+            if self.health < 1:
+                game.score += 100
+                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+                game.all_sprites_group.add(gamekey)
+                game.key_group.add(gamekey)
+                self.kill()
+                
+    #end procedure
+    def gethealth(self):
+        return self.health
+    #endprocedure
+
+    def sethealth(self, newhealth):
+        self.health = newhealth
+    #endfunction
+
+
+
+
 game = Game()
 # -------- Main Program Loop -----------
 while not done:
@@ -576,4 +618,3 @@ while not done:
     # Close the window and quit.
 pygame.quit()
 
-  
