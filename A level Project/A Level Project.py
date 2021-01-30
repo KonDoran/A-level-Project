@@ -27,7 +27,7 @@ done = False
     
     # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
-    
+
 
 
 
@@ -205,7 +205,7 @@ class Game(object):
 
     def runlogic(self):
         if not self.game_over:
-            print(self.levelcomplete)
+            #print(self.levelcomplete)
             # Move all the sprites
             self.all_sprites_group.update()
             if len(self.player_group) == 0:
@@ -290,6 +290,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.directionx = 0
         self.directiony = 5
+        self.previoustime = pygame.time.get_ticks()
         
     #end procedure
     def gethealth(self):
@@ -327,7 +328,11 @@ class Player(pygame.sprite.Sprite):
     def changespeed(self, x, y):
         self.speed_x += x
         self.speed_y += y
+
+
     def update(self):
+
+        print(pygame.time.get_ticks())
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.changespeed(-4,0)
@@ -346,12 +351,12 @@ class Player(pygame.sprite.Sprite):
             self.directionx = 0
             self.directiony = 6
         if keys[pygame.K_SPACE]:
-            if len(game.bullet_group) == 0:
-                #print("held down")
+            self.currenttime = pygame.time.get_ticks()
+            if self.currenttime - self.previoustime > 500:
                 bullet = Bullet(RED, self.directionx, self.directiony)
                 game.bullet_group.add(bullet)
                 game.all_sprites_group.add(bullet)
-                
+                self.previoustime = self.currenttime
         #end if
         self.move(self.speed_x,self.speed_y)
         self.speed_x = 0
