@@ -443,6 +443,9 @@ class Sword(pygame.sprite.Sprite):
         if not keys[pygame.K_e]:
             self.kill()
 
+    def attack(self):
+        enemy_hit_group = pygame.sprite.spritecollide(self, game.enemy_group, False)
+
 
 
 class Key(pygame.sprite.Sprite):
