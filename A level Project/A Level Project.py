@@ -51,7 +51,7 @@ class Game(object):
         self.portal_group = pygame.sprite.Group()
         self.door_group = pygame.sprite.Group()
         self.sword_group = pygame.sprite.Group()
-        self.levelcomplete = [False, False, False]
+        self.levelcomplete = [False, False, False, False, False]
         self.level1 = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -113,31 +113,87 @@ class Game(object):
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,2,2,0,0,2,2,1],
+            [1,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,2,0,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
             [1,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
             [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,1],
             [1,0,0,0,0,0,2,0,2,2,2,2,2,2,2,2,0,2,0,0,0,0,0,0,1],
-            [1,2,0,0,2,2,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
-            [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
-            [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,1],
-            [5,0,0,0,0,2,0,0,2,2,2,0,0,2,2,2,0,0,0,0,0,2,0,0,1],
-            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,1],
-            [1,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
+            [1,0,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
+            [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
+            [5,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,5],
+            [5,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,5],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [1,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
-            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,2,2,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,2,2,2,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
-            [1,0,0,0,0,2,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,0,0,1],
+            [1,0,0,0,0,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,1],
             [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         
-            ]            
-        self.levels = [self.level1, self.level2, self.level3]
+            ]
+
+        self.level4 = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
+            [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,0,2,2,2,2,2,2,2,2,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
+            [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+            [6,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,6],
+            [6,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,6],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [1,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,2,2,2,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [1,0,0,0,0,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        
+            ]
+
+        self.level5 = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,2,0,0,2,2,2,1],
+            [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,0,2,2,2,2,2,2,2,2,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,1],
+            [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+            [6,0,0,0,0,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,0,0,6],
+            [6,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,6],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [1,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,2,2,2,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+            [1,0,0,0,0,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        
+            ]
+                        
+        self.levels = [self.level1, self.level2, self.level3,self.level4, self.level5]
         self.levelsetup()
         self.player = Player(WHITE, 40, 40,40,500,100,0,0,0)
         self.all_sprites_group.add(self.player)
@@ -146,6 +202,14 @@ class Game(object):
         
     def levelsetup(self):
     
+        if (self.level + 1) % 5 == 0:
+            enemies = 0
+            while enemies != ((2*(self.level+1)) + 1):
+                xpos = random.randint(1,23)
+                ypos = random.randint(1,23)
+                if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
+                    self.levels[self.level][xpos][ypos] = random.randint(3,5)
+                    enemies = enemies +1
         enemies = 0
         while enemies != ((2*(self.level+1)) + 1):
             xpos = random.randint(1,23)
@@ -153,6 +217,7 @@ class Game(object):
             if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
                 self.levels[self.level][xpos][ypos] = random.randint(3,4)
                 enemies = enemies +1
+            
 
         for j in range(len(self.levels[self.level])):
             for i in range(len(self.levels[self.level][j])):
@@ -179,6 +244,11 @@ class Game(object):
                         self.all_sprites_group.add(self.enemy)
                         self.enemy_group.add(self.enemy)
                 if char == 5:
+                    if self.levelcomplete[self.level] == False:
+                        self.boss = BossEnemy(random.randint(0,10),80,80, i*40, j*40, 40)
+                        self.all_sprites_group.add(self.boss)
+                        self.enemy_group.add(self.boss)
+                if char == 6:
                     if self.levelcomplete[self.level] == False:
                         self.door = Door(PURPLE,40,40,i*40, j*40, i, j)
                         self.all_sprites_group.add(self.door)
@@ -458,10 +528,11 @@ class Key(pygame.sprite.Sprite):
         self.rect.x = x
 
     def update(self):
-        key_hit_group = pygame.sprite.groupcollide(game.key_group, game.player_group, True, False)
+        key_hit_group = pygame.sprite.groupcollide(game.key_group, game.player_group, False, False)
         for self in key_hit_group:
             game.player.gamekeys += 1
             game.score += 50
+            self.kill()
             
 
 
@@ -523,7 +594,7 @@ class Door(pygame.sprite.Sprite):
     #end procedure
 
     def update(self):
-        if  game.player.gamekeys == ((2*(game.level+1)) + 1):
+        if  game.player.gamekeys >= ((2*(game.level+1)) + 1):
             self.kill()
 
 
@@ -552,16 +623,22 @@ class MeleeEnemy(pygame.sprite.Sprite):
         for self in enemybullet_hit_group:
             self.health -= 20
             #print(self.health)
+            if self.health < 1:
+                game.score += 100
+                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+                game.all_sprites_group.add(gamekey)
+                game.key_group.add(gamekey)
+                self.kill()
         enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
         for self in enemysword_hit_group:
             self.health -= 4
 
-        if self.health < 1:
-            game.score += 100
-            gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
-            game.all_sprites_group.add(gamekey)
-            game.key_group.add(gamekey)
-            self.kill()
+            if self.health < 1:
+                game.score += 100
+                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+                game.all_sprites_group.add(gamekey)
+                game.key_group.add(gamekey)
+                self.kill()
                 
     #end procedure
 
@@ -625,16 +702,23 @@ class BowEnemy(pygame.sprite.Sprite):
         for self in enemybullet_hit_group:
             self.health -= 20
             #print(self.health)
+                
+            if self.health < 1:
+                game.score += 100
+                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+                game.all_sprites_group.add(gamekey)
+                game.key_group.add(gamekey)
+                self.kill()     
         enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
         for self in enemysword_hit_group:
             self.health -= 4   
 
-        if self.health < 1:
-            game.score += 100
-            gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
-            game.all_sprites_group.add(gamekey)
-            game.key_group.add(gamekey)
-            self.kill()     
+            if self.health < 1:
+                game.score += 100
+                gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
+                game.all_sprites_group.add(gamekey)
+                game.key_group.add(gamekey)
+                self.kill()     
     #end procedure
     def gethealth(self):
         return self.health
@@ -644,7 +728,28 @@ class BowEnemy(pygame.sprite.Sprite):
         self.health = newhealth
     #endfunction
 
+class BossEnemy(pygame.sprite.Sprite):
+    def __init__(self, direction, width, height, x, y, health):
+        #call sprite constructor
+        super().__init__()
+        #create a sprite
+        self.image = pygame.Surface([width,height])
+        self.image.fill(YELLOW)
+        #set the position of the sprite
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.health = health
+        self.direction = direction
 
+class HealthBar(pygame.sprite.Sprite):
+     def __init__(self, width, height, x, y):
+        self.image = pygame.Surface([width,height])
+        self.image.fill(YELLOW)
+        #set the position of the sprite
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
 game = Game()
