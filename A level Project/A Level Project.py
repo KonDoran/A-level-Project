@@ -292,7 +292,6 @@ class Game(object):
                     self.leveldelete()
                     self.levelsetup()
                 else:
-                    self.score += (self.player.health*100)+100
                     self.game_over = True
                     
             elif self.player.rect.x < 0:
