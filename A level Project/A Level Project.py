@@ -1,7 +1,7 @@
 import pygame
 import random
 import os
-
+import sys
 
 current_path = os.path.dirname(__file__)#where this file is located
 image_path = os.path.join(current_path, 'images')
@@ -346,7 +346,7 @@ class Player(pygame.sprite.Sprite):
     #define the constructor for the player
     speed_x = 0
     speed_y = 0
-    def __init__(self,color , width, height, x, y, health, score, money, gamekeys):
+    def __init__(self,color , width, height, x, y, score, money, gamekeys):
         #call sprite constructor
         super().__init__()
         #create a sprite
@@ -354,7 +354,10 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(color)
         #set the position of the sprite
         self.rect = self.image.get_rect()
-        self.health = health
+        self.current_health = 100
+        self.maximum_health = 100
+        self.health_bar_length = 180
+        self.health_ratio = self.maximum_health/ self.health_bar_length
         self.score = score
         self.money = money
         self.gamekeys = gamekeys
@@ -365,13 +368,26 @@ class Player(pygame.sprite.Sprite):
         self.previoustime = pygame.time.get_ticks()
         
     #end procedure
-    def gethealth(self):
-        return self.health
+    def gethealth(self, amount):
+        if self.current_health < self.maximum_health:
+            self.current_health += amount
+        if self.current_health >= self.maximum_health:
+            self.current_health = self.maximum_health
     #endprocedure
 
     def sethealth(self, newhealth):
         self.health = newhealth
     #endfunction
+
+    def getdamage(self,amount):
+        if self.current_health > 0:
+            self.current_health -= amount
+        if self.current_health <=0:
+            self.current_health = 0
+
+
+    def basic_health(self):
+        pygame.draw.rect(screen, RED, (10,10, self.current_health/self.health_ratio,25))
 
     def getscore(self):
         return self.score
@@ -403,6 +419,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
+        self.basic_health()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.changespeed(-4,0)
@@ -746,8 +763,9 @@ class BossEnemy(pygame.sprite.Sprite):
 class HealthBar(pygame.sprite.Sprite):
      def __init__(self, width, height, x, y):
         self.image = pygame.Surface([width,height])
-        self.image.fill(YELLOW)
+        self.image.fill(GREEN)
         #set the position of the sprite
+        
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
