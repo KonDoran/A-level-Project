@@ -327,6 +327,8 @@ class Game(object):
             screen.blit(keys, (1050,600))
             # --- Drawing code should go here
             self.all_sprites_group.draw(screen)
+            #self.player.basic_health()
+            self.player.advanced_health()
             #endif
         # --- Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
@@ -352,9 +354,11 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(color)
         #set the position of the sprite
         self.rect = self.image.get_rect()
-        self.current_health = 100
+        self.current_health = 50
         self.maximum_health = health
         self.health_bar_length = 180
+        self.target_health = 100
+        self.health_change_speed = 2
         self.health_ratio = self.maximum_health/ self.health_bar_length
         self.score = score
         self.money = money
@@ -367,10 +371,10 @@ class Player(pygame.sprite.Sprite):
         
     #end procedure
     def gethealth(self, amount):
-        if self.current_health < self.maximum_health:
-            self.current_health += amount
-        if self.current_health >= self.maximum_health:
-            self.current_health = self.maximum_health
+        if self.target_health < self.maximum_health:
+            self.target_health += amount
+        if self.target_health >= self.maximum_health:
+            self.target_health = self.maximum_health
     #endprocedure
 
     def sethealth(self, newhealth):
@@ -378,15 +382,35 @@ class Player(pygame.sprite.Sprite):
     #endfunction
 
     def getdamage(self,amount):
-        if self.current_health > 0:
-            self.current_health -= amount
-        if self.current_health <=0:
-            self.current_health = 0
+        if self.target_health > 0:
+            self.target_health -= amount
+        if self.target_health <=0:
+            self.target_health = 0
 
 
-    def basic_health(self):
-        pygame.draw.rect(screen, (255,0,0), (50,50, self.current_health/self.health_ratio,25))
-        print("hi")
+    def advanced_health(self):
+	    transition_width = 0
+	    transition_color = RED
+
+	    if self.current_health < self.target_health:
+		    self.current_health += self.health_change_speed
+		    transition_width = int((self.target_health - self.current_health) / self.health_ratio)
+		    transition_color = GREEN
+
+	    if self.current_health > self.target_health:
+		    self.current_health -= self.health_change_speed 
+		    transition_width = int((self.target_health - self.current_health) / self.health_ratio)
+		    transition_color = YELLOW
+
+	    health_bar_width = int(self.current_health / self.health_ratio)
+	    health_bar = pygame.Rect(1005,45,health_bar_width,25)
+	    transition_bar = pygame.Rect(health_bar.right,45,transition_width,25)
+		
+	    pygame.draw.rect(screen,RED,health_bar)
+	    pygame.draw.rect(screen,transition_color,transition_bar)	
+	    pygame.draw.rect(screen,WHITE,(1005,45,self.health_bar_length,25),4)	
+
+
 
     def getscore(self):
         return self.score
