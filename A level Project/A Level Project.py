@@ -319,11 +319,9 @@ class Game(object):
             screen.blit(score, (520,500))
         if not self.game_over:
             font = pygame.font.Font(None, 24)
-            health = font.render('HEALTH:'+str(self.player.gethealth()), 1, WHITE)
             score = font.render('SCORE:'+str(self.getscore()), 1, WHITE)
             money = font.render('MONEY:'+str(self.player.getmoney()), 1, WHITE)
             keys = font.render('KEYS:'+str(self.player.getkeys()), 1, WHITE)
-            screen.blit(health, (1050,450))
             screen.blit(score, (1050,500))
             screen.blit(money, (1050,550))
             screen.blit(keys, (1050,600))
@@ -346,7 +344,7 @@ class Player(pygame.sprite.Sprite):
     #define the constructor for the player
     speed_x = 0
     speed_y = 0
-    def __init__(self,color , width, height, x, y, score, money, gamekeys):
+    def __init__(self,color , width, height, x, y, health, score, money, gamekeys):
         #call sprite constructor
         super().__init__()
         #create a sprite
@@ -355,7 +353,7 @@ class Player(pygame.sprite.Sprite):
         #set the position of the sprite
         self.rect = self.image.get_rect()
         self.current_health = 100
-        self.maximum_health = 100
+        self.maximum_health = health
         self.health_bar_length = 180
         self.health_ratio = self.maximum_health/ self.health_bar_length
         self.score = score
@@ -387,7 +385,8 @@ class Player(pygame.sprite.Sprite):
 
 
     def basic_health(self):
-        pygame.draw.rect(screen, RED, (10,10, self.current_health/self.health_ratio,25))
+        pygame.draw.rect(screen, (255,0,0), (50,50, self.current_health/self.health_ratio,25))
+        print("hi")
 
     def getscore(self):
         return self.score
@@ -463,8 +462,8 @@ class Player(pygame.sprite.Sprite):
         self.speed_y = 0
         player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
         for self in player_hit_group:
-            self.health -= 2
-            if self.health < 1:
+            self.getdamage(2)
+            if self.current_health < 1:
                 game.score += 100
                 self.kill()
     #end procedure
