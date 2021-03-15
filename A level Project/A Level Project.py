@@ -402,10 +402,14 @@ class Player(pygame.sprite.Sprite):
 		    transition_width = int((self.target_health - self.current_health) / self.health_ratio)
 		    transition_color = YELLOW
 
+        
+
 	    health_bar_width = int(self.current_health / self.health_ratio)
 	    health_bar = pygame.Rect(1005,45,health_bar_width,25)
 	    transition_bar = pygame.Rect(health_bar.right,45,transition_width,25)
 		
+        
+
 	    pygame.draw.rect(screen,RED,health_bar)
 	    pygame.draw.rect(screen,transition_color,transition_bar)	
 	    pygame.draw.rect(screen,WHITE,(1005,45,self.health_bar_length,25),4)	
@@ -442,7 +446,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.basic_health()
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.changespeed(-4,0)
