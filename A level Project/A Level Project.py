@@ -2,6 +2,8 @@ import pygame
 import random
 import os
 import sys
+from collections import deque
+vec = pygame.math.Vector2
 
 current_path = os.path.dirname(__file__)#where this file is located
 image_path = os.path.join(current_path, 'images')
@@ -21,6 +23,9 @@ GRIDWIDTH = 25
 GRIDHEIGHT = 25
 WIDTH = TILESIZE * GRIDWIDTH
 HEIGHT = TILESIZE * GRIDHEIGHT
+icon_dir = os.path.join(current_path, 'icons')
+goal = vec(14, 8)
+start = vec(20, 0)
 pygame.init()
 
 # Set the width and height of the screen [width, height]
@@ -30,6 +35,21 @@ screen_height = 1000
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Tile Movement Game")
 clock = pygame.time.Clock()
+
+home_img = pygame.image.load(os.path.join(icon_dir, 'home.png')).convert_alpha()
+home_img = pygame.transform.scale(home_img, (50, 50))
+home_img.fill((0, 255, 0, 255), special_flags=pygame.BLEND_RGBA_MULT)
+cross_img = pygame.image.load(os.path.join(icon_dir, 'cross.png')).convert_alpha()
+cross_img = pygame.transform.scale(cross_img, (50, 50))
+cross_img.fill((255, 0, 0, 255), special_flags=pygame.BLEND_RGBA_MULT)
+arrows = {}
+arrow_img = pygame.image.load(os.path.join(icon_dir, 'arrowRight.png')).convert_alpha()
+arrow_img = pygame.transform.scale(arrow_img, (50, 50))
+for dir in [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
+    arrows[dir] = pygame.transform.rotate(arrow_img, vec(dir).angle_to(vec(1, 0)))
+
+
+
 
 
 def text_objects(text,font):
@@ -440,6 +460,16 @@ def gameloop():
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
+                current = start + path[vec2int(start)]
+                while current != goal:
+                    x = current.x * TILESIZE + TILESIZE / 2
+                    y = current.y * TILESIZE + TILESIZE / 2
+                    img = arrows[vec2int(path[(current.x, current.y)])]
+                    r = img.get_rect(center=(x, y))
+                    screen.blit(img, r)
+                    # find next in path
+                    current = current + path[vec2int(current)]
+                draw_icons()
                 #self.player.basic_health()
                 
                 #endif
@@ -916,7 +946,13 @@ def gameloop():
             self.rect.x = x
             self.rect.y = y
 
-
+    g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
+    walls = [(10, 7), (11, 7), (12, 7), (13, 7), (14, 7), (15, 7), (16, 7), (7, 7), (6, 7), (5, 7), (5, 5), (5, 6), (1, 6), (2, 6), (3, 6), (5, 10), (5, 11), (5, 12), (5, 9), (5, 8), (12, 8), (12, 9), (12, 10), (12, 11), (15, 14), (15, 13), (15, 12), (15, 11), (15, 10), (17, 7), (18, 7), (21, 7), (21, 6), (21, 5), (21, 4), (21, 3), (22, 5), (23, 5), (24, 5), (25, 5), (18, 10), (20, 10), (19, 10), (21, 10), (22, 10), (23, 10), (14, 4), (14, 5), (14, 6), (14, 0), (14, 1), (9, 2), (9, 1), (7, 3), (8, 3), (10, 3), (9, 3), (11, 3), (2, 5), (2, 4), (2, 3), (2, 2), (2, 0), (2, 1), (0, 11), (1, 11), (2, 11), (21, 2), (20, 11), (20, 12), (23, 13), (23, 14), (24, 10), (25, 10), (6, 12), (7, 12), (10, 12), (11, 12), (12, 12), (5, 3), (6, 3), (5, 4)]
+    for wall in walls:
+        g.walls.append(vec(wall))
+    goal = vec(14, 8)
+    start = vec(20, 0)
+    path = breadth_first_search(g, goal, start)
     game = Game()
     # -------- Main Program Loop -----------
     while not done:
@@ -928,7 +964,7 @@ def gameloop():
 
             #draw the screen
         game.display(screen)
-            
+        
             # --- Limit to 60 frames per second
         clock.tick(60)
         
