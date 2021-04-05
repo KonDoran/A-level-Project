@@ -16,6 +16,11 @@ PURPLE = (75,0,130)
 ORANGE = (230,165,0)
 GREY = (180,180,180)
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'Menu background.png'))
+TILESIZE = 40
+GRIDWIDTH = 25
+GRIDHEIGHT = 25
+WIDTH = TILESIZE * GRIDWIDTH
+HEIGHT = TILESIZE * GRIDHEIGHT
 pygame.init()
 
 # Set the width and height of the screen [width, height]
@@ -75,6 +80,35 @@ def game_intro():
         clock.tick(60)
 
 
+
+def draw_icons():
+    start_center = (goal.x * TILESIZE + TILESIZE / 2, goal.y * TILESIZE + TILESIZE / 2)
+    screen.blit(home_img, home_img.get_rect(center=start_center))
+    goal_center = (start.x * TILESIZE + TILESIZE / 2, start.y * TILESIZE + TILESIZE / 2)
+    screen.blit(cross_img, cross_img.get_rect(center=goal_center))
+
+def vec2int(v):
+    return (int(v.x), int(v.y))
+
+def breadth_first_search(graph, start, end):
+    frontier = deque()
+    frontier.append(start)
+    path = {}
+    path[vec2int(start)] = None
+    while len(frontier) > 0:
+        current = frontier.popleft()
+        if current == end:
+            break
+        for next in graph.find_neighbors(current):
+            if vec2int(next) not in path:
+                frontier.append(next)
+                path[vec2int(next)] = current - next
+    return path
+
+
+
+
+
 def gameloop():
     #Loop until the user clicks the close button.
     done = False
@@ -82,7 +116,29 @@ def gameloop():
         # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
+    class SquareGrid:
+        def __init__(self, width, height):
+            self.width = width
+            self.height = height
+            self.walls = []
+            self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
+            # comment/uncomment this for diagonals:
+            # self.connections += [vec(1, 1), vec(-1, 1), vec(1, -1), vec(-1, -1)]
 
+        def in_bounds(self, node):
+            return 0 <= node.x < self.width and 0 <= node.y < self.height
+
+        def passable(self, node):
+            return node not in self.walls
+
+        def find_neighbors(self, node):
+            neighbors = [node + connection for connection in self.connections]
+            # don't use this for diagonals:
+            if (node.x + node.y) % 2:
+                neighbors.reverse()
+            neighbors = filter(self.in_bounds, neighbors)
+            neighbors = filter(self.passable, neighbors)
+            return neighbors
 
 
 
@@ -677,7 +733,7 @@ def gameloop():
         #end procedure
 
         def getpos(self):
-            return [self.positionx, self.positiony]
+            return [self.positionx/40, self.positiony/40]
 
     class InnerWall(Wall):
 
@@ -748,6 +804,7 @@ def gameloop():
                     self.kill()
                     
         #end procedure
+        #def getpos(self):
 
 
         def MOVE(self):
