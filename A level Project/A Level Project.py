@@ -101,14 +101,11 @@ def game_intro():
 
 
 
-def draw_icons():
-    start_center = (goal.x * TILESIZE + TILESIZE / 2, goal.y * TILESIZE + TILESIZE / 2)
-    screen.blit(home_img, home_img.get_rect(center=start_center))
-    goal_center = (start.x * TILESIZE + TILESIZE / 2, start.y * TILESIZE + TILESIZE / 2)
-    screen.blit(cross_img, cross_img.get_rect(center=goal_center))
+
 
 def vec2int(v):
     return (int(v.x), int(v.y))
+    
 
 def breadth_first_search(graph, start, end):
     frontier = deque()
@@ -130,6 +127,21 @@ def breadth_first_search(graph, start, end):
 
 
 def gameloop():
+
+    def draw_icons():
+        start_center = (game.player.goal.x * TILESIZE + TILESIZE / 2, game.player.goal.y * TILESIZE + TILESIZE / 2)
+        screen.blit(home_img, home_img.get_rect(center=start_center))
+        goal_center = (game.player.start.x * TILESIZE + TILESIZE / 2, game.player.start.y * TILESIZE + TILESIZE / 2)
+        screen.blit(cross_img, cross_img.get_rect(center=goal_center))
+
+
+
+
+
+
+
+
+
     #Loop until the user clicks the close button.
     done = False
         
@@ -359,11 +371,13 @@ def gameloop():
                         self.all_sprites_group.add(self.outsidewall)
                         self.wall_group.add(self.outsidewall)
                         self.outsidewall_group.add(self.outsidewall)
+                        g.walls.append(vec((self.outsidewall.rect.x/40), (self.outsidewall.rect.y/40)))
                     if char == 2:
                         self.innerwall = InnerWall(RED,40,40,i*40, j*40, i, j)
                         self.all_sprites_group.add(self.innerwall)
                         self.wall_group.add(self.innerwall)
                         self.innerwall_group.add(self.innerwall)
+                        g.walls.append(vec((self.innerwall.rect.x/40), (self.innerwall.rect.y/40)))
                     if char == 3:
                         if self.levelcomplete[self.level] == False:
                             self.enemy = BowEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
@@ -460,15 +474,15 @@ def gameloop():
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
-                current = start + path[vec2int(start)]
-                while current != goal:
-                    x = current.x * TILESIZE + TILESIZE / 2
-                    y = current.y * TILESIZE + TILESIZE / 2
-                    img = arrows[vec2int(path[(current.x, current.y)])]
-                    r = img.get_rect(center=(x, y))
-                    screen.blit(img, r)
+                #current = self.player.start + self.player.path[vec2int(self.player.start)]
+                #while current != self.player.goal:
+                    #x = current.x * TILESIZE + TILESIZE / 2
+                    #y = current.y * TILESIZE + TILESIZE / 2
+                    #img = arrows[vec2int(self.player.path[(current.x, current.y)])]
+                    #r = img.get_rect(center=(x, y))
+                    #screen.blit(img, r)
                     # find next in path
-                    current = current + path[vec2int(current)]
+                    #current = current + self.player.path[vec2int(current)]
                 draw_icons()
                 #self.player.basic_health()
                 
@@ -513,7 +527,10 @@ def gameloop():
             self.directiony = 5
             self.previoushealthtime = pygame.time.get_ticks()
             self.previousbullettime = pygame.time.get_ticks()
-
+            self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
+            self.goal = vec((self.rect.x/40),(self.rect.y/40))
+            self.start = vec(20,1)
+            self.path = breadth_first_search(g,self.goal, self.start)
             
         #end procedure
         def gethealth(self, amount):
@@ -564,6 +581,10 @@ def gameloop():
         def getscore(self):
             return self.score
         #endprocedure
+
+        def getpos(self):
+            return vec(self.rect.x/40, self.rect.y/40)
+        #endfunction
 
         def setscore(self, score):
             self.score = score
@@ -642,6 +663,12 @@ def gameloop():
                 if self.current_health < 1:
                     game.score += 100
                     self.kill()
+
+            self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
+            self.goal = vec((self.rect.x/40),(self.rect.y/40))
+            self.start = vec(20,1)
+            #print(self.start)
+            self.path = breadth_first_search(g,self.goal, self.start)
         #end procedure
 
         def move(self, speedx, speedy):
@@ -833,9 +860,9 @@ def gameloop():
                     game.key_group.add(gamekey)
                     self.kill()
                     
-        #end procedure
-        #def getpos(self):
-
+        
+        def getpos(self):
+            return vec(self.rect.x/40, self.rect.y/40)
 
         def MOVE(self):
             if self.direction % 2 == 0:
@@ -945,15 +972,17 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-
+    
     g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
-    walls = [(10, 7), (11, 7), (12, 7), (13, 7), (14, 7), (15, 7), (16, 7), (7, 7), (6, 7), (5, 7), (5, 5), (5, 6), (1, 6), (2, 6), (3, 6), (5, 10), (5, 11), (5, 12), (5, 9), (5, 8), (12, 8), (12, 9), (12, 10), (12, 11), (15, 14), (15, 13), (15, 12), (15, 11), (15, 10), (17, 7), (18, 7), (21, 7), (21, 6), (21, 5), (21, 4), (21, 3), (22, 5), (23, 5), (24, 5), (25, 5), (18, 10), (20, 10), (19, 10), (21, 10), (22, 10), (23, 10), (14, 4), (14, 5), (14, 6), (14, 0), (14, 1), (9, 2), (9, 1), (7, 3), (8, 3), (10, 3), (9, 3), (11, 3), (2, 5), (2, 4), (2, 3), (2, 2), (2, 0), (2, 1), (0, 11), (1, 11), (2, 11), (21, 2), (20, 11), (20, 12), (23, 13), (23, 14), (24, 10), (25, 10), (6, 12), (7, 12), (10, 12), (11, 12), (12, 12), (5, 3), (6, 3), (5, 4)]
-    for wall in walls:
-        g.walls.append(vec(wall))
-    goal = vec(14, 8)
-    start = vec(20, 0)
-    path = breadth_first_search(g, goal, start)
     game = Game()
+    
+    #walls = [(10, 7), (11, 7), (12, 7), (13, 7), (14, 7), (15, 7), (16, 7), (7, 7), (6, 7), (5, 7), (5, 5), (5, 6), (1, 6), (2, 6), (3, 6), (5, 10), (5, 11), (5, 12), (5, 9), (5, 8), (12, 8), (12, 9), (12, 10), (12, 11), (15, 14), (15, 13), (15, 12), (15, 11), (15, 10), (17, 7), (18, 7), (21, 7), (21, 6), (21, 5), (21, 4), (21, 3), (22, 5), (23, 5), (24, 5), (25, 5), (18, 10), (20, 10), (19, 10), (21, 10), (22, 10), (23, 10), (14, 4), (14, 5), (14, 6), (14, 0), (14, 1), (9, 2), (9, 1), (7, 3), (8, 3), (10, 3), (9, 3), (11, 3), (2, 5), (2, 4), (2, 3), (2, 2), (2, 0), (2, 1), (0, 11), (1, 11), (2, 11), (21, 2), (20, 11), (20, 12), (23, 13), (23, 14), (24, 10), (25, 10), (6, 12), (7, 12), (10, 12), (11, 12), (12, 12), (5, 3), (6, 3), (5, 4)]
+    #for wall in walls:
+        #g.walls.append(vec(wall))
+    #goal = vec(15, 8)
+    #start = vec(20,1)
+    #path = breadth_first_search(g, goal, start)
+    
     # -------- Main Program Loop -----------
     while not done:
             # --- Main event loop
