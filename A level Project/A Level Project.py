@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 import sys
+import math
 from collections import deque
 vec = pygame.math.Vector2
 
@@ -129,9 +130,9 @@ def breadth_first_search(graph, start, end):
 def gameloop():
 
     def draw_icons():
-        start_center = (game.player.goal.x * TILESIZE + TILESIZE / 2, game.player.goal.y * TILESIZE + TILESIZE / 2)
+        start_center = (game.menemy.goal.x * TILESIZE + TILESIZE / 2, game.menemy.goal.y * TILESIZE + TILESIZE / 2)
         screen.blit(home_img, home_img.get_rect(center=start_center))
-        goal_center = (game.player.start.x * TILESIZE + TILESIZE / 2, game.player.start.y * TILESIZE + TILESIZE / 2)
+        goal_center = (game.menemy.start.x * TILESIZE + TILESIZE / 2, game.menemy.start.y * TILESIZE + TILESIZE / 2)
         screen.blit(cross_img, cross_img.get_rect(center=goal_center))
 
 
@@ -380,14 +381,14 @@ def gameloop():
                         g.walls.append(vec((self.innerwall.rect.x/40), (self.innerwall.rect.y/40)))
                     if char == 3:
                         if self.levelcomplete[self.level] == False:
-                            self.enemy = BowEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
-                            self.all_sprites_group.add(self.enemy)
-                            self.enemy_group.add(self.enemy)
+                            self.benemy = BowEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
+                            self.all_sprites_group.add(self.benemy)
+                            self.enemy_group.add(self.benemy)
                     if char == 4:
                         if self.levelcomplete[self.level] == False:
-                            self.enemy = MeleeEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
-                            self.all_sprites_group.add(self.enemy)
-                            self.enemy_group.add(self.enemy)
+                            self.menemy = MeleeEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
+                            self.all_sprites_group.add(self.menemy)
+                            self.enemy_group.add(self.menemy)
                     if char == 5:
                         if self.levelcomplete[self.level] == False:
                             self.boss = BossEnemy(random.randint(0,10),80,80, i*40, j*40, 40)
@@ -527,10 +528,6 @@ def gameloop():
             self.directiony = 5
             self.previoushealthtime = pygame.time.get_ticks()
             self.previousbullettime = pygame.time.get_ticks()
-            self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
-            self.goal = vec((self.rect.x/40),(self.rect.y/40))
-            self.start = vec(20,1)
-            self.path = breadth_first_search(g,self.goal, self.start)
             
         #end procedure
         def gethealth(self, amount):
@@ -664,11 +661,7 @@ def gameloop():
                     game.score += 100
                     self.kill()
 
-            self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
-            self.goal = vec((self.rect.x/40),(self.rect.y/40))
-            self.start = vec(20,1)
-            #print(self.start)
-            self.path = breadth_first_search(g,self.goal, self.start)
+            
         #end procedure
 
         def move(self, speedx, speedy):
@@ -833,12 +826,17 @@ def gameloop():
             self.rect.y = y
             self.health = health
             self.direction = direction
-            self.move = 5
-            
+            self.move = 3
+            self.goal = vec(13,3)
+            self.start = vec(self.rect.x, self.rect.y)
+            self.previouspathtime = pygame.time.get_ticks()
         #end procedure
         def update(self):
             
-            self.MOVE()
+            if self.is_close() == True:
+                self.chase()
+            else:
+                self.MOVE()
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
                 self.health -= 20
@@ -859,7 +857,18 @@ def gameloop():
                     game.all_sprites_group.add(gamekey)
                     game.key_group.add(gamekey)
                     self.kill()
-                    
+                #endif
+            #next
+            self.currentpathtime = pygame.time.get_ticks()
+            if self.currentpathtime - self.previouspathtime > 500:                  
+                #self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
+                #self.goal = vec((game.player.rect.x/40),(game.player.rect.y/40))
+                #self.start = vec(self.rect.x, self.rect.y)
+                #print(self.start)
+                #self.path = breadth_first_search(g,self.goal, self.start)
+                #self.previouspathtime = self.currentpathtime
+                pass
+                
         
         def getpos(self):
             return vec(self.rect.x/40, self.rect.y/40)
@@ -875,9 +884,6 @@ def gameloop():
                     else:
                         self.rect.left = wall.rect.right    
                         self.move = self.move * -1
-        
-        
-        
             #move the player up and down the screen
             else:
                 self.rect.y += self.move
@@ -892,6 +898,42 @@ def gameloop():
                         self.rect.top = wall.rect.bottom
                         self.move = self.move * -1
 
+        def chase(self):
+            self.move = 3
+            if self.is_close() == True:
+                if game.player.rect.x < self.rect.x:
+                    self.rect.x += self.move
+                    wallcollision = pygame.sprite.groupcollide(game.enemy_group,game.wall_group, False,False)
+                    for wall in wallcollision:
+                        if self.move > 0:
+                            self.rect.right = wall.rect.left
+                            
+                        else:
+                            self.rect.left = wall.rect.right    
+                            
+                if game.player.rect.x > self.rect.x:
+                    self.rect.x -= self.move
+                    wallcollision = pygame.sprite.groupcollide(game.enemy_group,game.wall_group, False,False)
+                    for wall in wallcollision:
+                        if self.move > 0:
+                            self.rect.right = wall.rect.left
+                            
+                        else:
+                            self.rect.left = wall.rect.right    
+
+                if game.player.rect.y < self.rect.y:
+                    self.rect.y += self.move
+                if game.player.rect.y > self.rect.y:
+                    self.rect.y -= self.move
+
+        def is_close(self):
+            lengthx = self.rect.x - game.player.rect.x
+            lengthy = self.rect.y - game.player.rect.y
+            distance = math.sqrt((lengthx ** 2) + (lengthy ** 2))
+            if distance < 400:
+                return True
+            else:
+                return False
 
         def gethealth(self):
             return self.health
