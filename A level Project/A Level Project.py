@@ -484,7 +484,7 @@ def gameloop():
                     #screen.blit(img, r)
                     # find next in path
                     #current = current + self.player.path[vec2int(current)]
-                draw_icons()
+                #draw_icons()
                 #self.player.basic_health()
                 
                 #endif
@@ -832,6 +832,7 @@ def gameloop():
             self.goal = vec(13,3)
             self.start = vec(self.rect.x, self.rect.y)
             self.previouspathtime = pygame.time.get_ticks()
+            self.move = 3
         #end procedure
 
         def changespeed(self,x,y):
@@ -842,35 +843,11 @@ def gameloop():
 
         def update(self):
 
-            # Move along x axis
-            self.rect.x += self.speed_x
-
-            # Did enemy hit a wall
-            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)  # false so it doesn't remove the wall, true would
-            for wall in block_hit_list:
-                # If moving right, place enemy to the left side of wall
-
-                if self.speed_x > 0:
-                    self.rect.right = wall.rect.left
-                else:
-                    #  if  moving left, do the opposite.
-                    self.rect.left = wall.rect.right
-
-            # Move along y axis
-            self.rect.y += self.speed_y
-
-            # Did enemy hit a wall
-            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)
-            for wall in block_hit_list:
-
-                # Do same as above but on the y axis
-                if self.speed_y > 0:
-                    self.rect.bottom = wall.rect.top
-                else:
-                    self.rect.top = wall.rect.bottom
 
             if self.is_close() == True:
                 self.movetoplayer(game.player)
+            elif self.is_close() == False:
+                self.MOVE()
 
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
@@ -936,22 +913,53 @@ def gameloop():
                         self.rect.top = wall.rect.bottom
                         self.move = self.move * -1
 
+
         def movetoplayer(self, Player):
 
-            if Player.rect.x > self.rect.x:
-                self.changespeed(1,0)
-            elif Player.rect.x < self.rect.x:
-                self.changespeed(-1,0)
-            elif Player.rect.y > self.rect.y:
-                self.changespeed(0,1)
-            elif Player.rect.y < self.rect.y:
-                self.changespeed(0,-1)
+            if Player.rect.x - 10 > self.rect.x:
+                self.speed_x = 2
+            if Player.rect.x - 10 < self.rect.x:
+                self.speed_x = -2
+            if Player.rect.y - 10 > self.rect.y:
+                self.speed_y = 2
+            if Player.rect.y - 10< self.rect.y:
+                self.speed_y = -2
+
+             # Move along x axis
+            self.rect.x += self.speed_x
+
+            # Did enemy hit a wall
+            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)  # false so it doesn't remove the wall, true would
+            for wall in block_hit_list:
+                # If moving right, place enemy to the left side of wall
+
+                if self.speed_x > 0:
+                    self.rect.right = wall.rect.left
+                    
+                else:
+                    #  if  moving left, do the opposite.
+                    self.rect.left = wall.rect.right
+                    
+
+
+            # Move along y axis
+            self.rect.y += self.speed_y
+
+            # Did enemy hit a wall
+            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)
+            for wall in block_hit_list:
+                # Do same as above but on the y axis
+                if self.speed_y > 0:
+                    self.rect.bottom = wall.rect.top
+
+                else:
+                    self.rect.top = wall.rect.bottom
 
         def is_close(self):
             lengthx = self.rect.x - game.player.rect.x
             lengthy = self.rect.y - game.player.rect.y
             distance = math.sqrt((lengthx ** 2) + (lengthy ** 2))
-            if distance < 400:
+            if distance < 300:
                 return True
             else:
                 return False
