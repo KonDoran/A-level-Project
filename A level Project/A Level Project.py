@@ -25,8 +25,6 @@ GRIDHEIGHT = 25
 WIDTH = TILESIZE * GRIDWIDTH
 HEIGHT = TILESIZE * GRIDHEIGHT
 icon_dir = os.path.join(current_path, 'icons')
-goal = vec(14, 8)
-start = vec(20, 0)
 pygame.init()
 
 # Set the width and height of the screen [width, height]
@@ -528,6 +526,8 @@ def gameloop():
             self.directiony = 5
             self.previoushealthtime = pygame.time.get_ticks()
             self.previousbullettime = pygame.time.get_ticks()
+            self.previousdamagetime = pygame.time.get_ticks()
+            self.previousattacktime = pygame.time.get_ticks()
             
         #end procedure
         def gethealth(self, amount):
@@ -627,18 +627,21 @@ def gameloop():
                 self.changespeed(0,4)
                 self.directionx = 0
                 self.directiony = 6
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_e]:
                 self.currentbullettime = pygame.time.get_ticks()
                 if self.currentbullettime - self.previousbullettime > 500:
                     bullet = Bullet(RED, self.directionx, self.directiony)
                     game.bullet_group.add(bullet)
                     game.all_sprites_group.add(bullet)
                     self.previousbullettime = self.currentbullettime
-            if keys[pygame.K_e]:
+            if keys[pygame.K_SPACE]:
                 if len(game.sword_group) == 0:
-                    sword = Sword(GREEN)
-                    game.sword_group.add(sword)
-                    game.all_sprites_group.add(sword)
+                    self.currentattacktime = pygame.time.get_ticks()
+                    if self.currentattacktime - self.previousattacktime > 1000:
+                        sword = Sword(GREEN)
+                        game.sword_group.add(sword)
+                        game.all_sprites_group.add(sword)
+                        self.previousattacktime = self.currentattacktime
                     
 
 
@@ -654,12 +657,10 @@ def gameloop():
             self.move(self.speed_x,self.speed_y)
             self.speed_x = 0
             self.speed_y = 0
-            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
-            for self in player_hit_group:
-                self.getdamage(2)
-                if self.current_health < 1:
-                    game.score += 100
-                    self.kill()
+
+            if self.current_health < 1:
+                game.score += 100
+                self.kill()
 
             
         #end procedure
@@ -713,21 +714,22 @@ def gameloop():
         def __init__(self, color):
             #call sprite constructor
             super().__init__()
-            self.image = pygame.Surface([20,5])
-            self.image.fill(color)
-            self.rect = self.image.get_rect()
-            self.rect.y = game.player.rect.y + 18
-            self.rect.x = game.player.rect.x  + 40
+            self.image = pygame.Surface((70, 70))
+            #self.image.fill(BLACK)
+            pygame.draw.circle(self.image, (color), (35, 35), 35)
+            self.rect = self.image.get_rect() 
+            self.rect.center = (0, 0)
+            self.previousattacktime = pygame.time.get_ticks()
 
         def update(self):
-            self.rect.y = game.player.rect.y + 18
-            self.rect.x = game.player.rect.x  + 40
-            keys = pygame.key.get_pressed()
-            if not keys[pygame.K_e]:
+            self.rect.y = game.player.rect.y -15
+            self.rect.x = game.player.rect.x  -15
+            self.currentattacktime = pygame.time.get_ticks()
+            if self.currentattacktime - self.previousattacktime > 750:
                 self.kill()
+                self.previousattacktime = self.currentattacktime
 
-        def attack(self):
-            enemy_hit_group = pygame.sprite.spritecollide(self, game.enemy_group, False)
+            
 
 
 
@@ -833,6 +835,8 @@ def gameloop():
             self.start = vec(self.rect.x, self.rect.y)
             self.previouspathtime = pygame.time.get_ticks()
             self.move = 3
+            self.previousdamagetime = pygame.time.get_ticks()
+            self.previousattacktime = pygame.time.get_ticks()
         #end procedure
 
         def changespeed(self,x,y):
@@ -861,7 +865,10 @@ def gameloop():
                     self.kill()
             enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
             for self in enemysword_hit_group:
-                self.health -= 4
+                self.currentdamagetime = pygame.time.get_ticks()
+                if self.currentdamagetime - self.previousdamagetime > 1000:
+                    self.health -= 20
+                    self.previousdamagetime = self.currentdamagetime
 
                 if self.health < 1:
                     game.score += 100
@@ -872,15 +879,22 @@ def gameloop():
                 #endif
             #next
 
-            self.currentpathtime = pygame.time.get_ticks()
-            if self.currentpathtime - self.previouspathtime > 500:                  
+            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
+            for game.player in player_hit_group:
+                self.currentattacktime = pygame.time.get_ticks()
+                if self.currentattacktime - self.previousattacktime > 2000:
+                    game.player.getdamage(10)
+                    self.previousattacktime = self.currentattacktime
+                 
+            #self.currentpathtime = pygame.time.get_ticks()
+            #if self.currentpathtime - self.previouspathtime > 500:                  
                 #self.g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
                 #self.goal = vec((game.player.rect.x/40),(game.player.rect.y/40))
                 #self.start = vec(self.rect.x, self.rect.y)
                 #print(self.start)
                 #self.path = breadth_first_search(g,self.goal, self.start)
                 #self.previouspathtime = self.currentpathtime
-                pass
+                #pass
 
                 
                 
@@ -986,6 +1000,8 @@ def gameloop():
             self.rect.y = y
             self.health = health
             self.direction = direction
+            self.previousdamagetime = pygame.time.get_ticks()
+            self.previousattacktime = pygame.time.get_ticks()
             
         #end procedure
         def update(self):
@@ -1003,7 +1019,10 @@ def gameloop():
                     self.kill()     
             enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
             for self in enemysword_hit_group:
-                self.health -= 4   
+                self.currentdamagetime = pygame.time.get_ticks()
+                if self.currentdamagetime - self.previousdamagetime > 1000:
+                    self.health -= 20
+                    self.previousdamagetime = self.currentdamagetime
 
                 if self.health < 1:
                     game.score += 100
