@@ -16,8 +16,9 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 PINK = (255,20,147)
 PURPLE = (75,0,130)
+BROWN = (150, 75, 0)
 ORANGE = (230,165,0)
-LIGHTBLUE = (173, 216, 230)
+LIGHTBLUE = (173, 216, 240)
 GREY = (180,180,180)
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'Menu background.png'))
 TILESIZE = 40
@@ -194,6 +195,7 @@ def gameloop():
             self.door_group = pygame.sprite.Group()
             self.sword_group = pygame.sprite.Group()
             self.spike_group = pygame.sprite.Group()
+            self.chest_group = pygame.sprite.Group()
             self.levelcomplete = [False, False, False, False, False]
             self.level1 = [
                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -427,12 +429,18 @@ def gameloop():
 
         def runlogic(self):
             if not self.game_over:
+                if len(self.enemy_group) == 0:
+                    self.levelcomplete[self.level] = True
+                if self.levelcomplete[self.level] == True:
+                    self.chest = Chest(BROWN, 40, 40, 460,440)
+                    self.all_sprites_group.add(self.chest)
+                    self.chest_group.add(self.chest)
                 #print(self.levelcomplete)
                 # Move all the sprites
                 self.all_sprites_group.update()
                 if len(self.player_group) == 0:
                     self.game_over = True
-                
+                #print(len(game.enemy_group))
                 if self.player.rect.x > 1000:
                     if self.level != (len(self.levels)-1):
                         self.levelcomplete[self.level] = True
@@ -445,8 +453,7 @@ def gameloop():
                         self.game_over = True
                         
                 elif self.player.rect.x < 0:
-                    self.levelcomplete[self.level] = True
-                    print(self.levelcomplete)
+                    
                     self.level -= 1
                     self.leveldelete()
                     self.player.rect.x = 960
@@ -852,6 +859,20 @@ def gameloop():
                     if self.currentdamagetime - self.previousdamagetime > 2000:
                         game.player.getdamage(10)
                         self.previousdamagetime = self.currentdamagetime
+
+
+    class Chest(pygame.sprite.Sprite):
+        def __init__(self,color, width, height, x, y):
+            super().__init__()
+            self.image = pygame.Surface([width,height])
+            self.image.fill(color)
+            #set the position of the sprite
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y
+
+        def update(self):
+            pass
 
     class MeleeEnemy(pygame.sprite.Sprite):
         
