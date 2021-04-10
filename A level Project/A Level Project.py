@@ -314,25 +314,25 @@ def gameloop():
                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,6],
-                [1,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,6],
-                [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,6],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,2,2,2,7,7,7,7,7,7,7,7,7,7,7,7,7,2,2,2,0,0,1],
+                [1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+                [1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,6],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,6],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,6],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1],
+                [1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+                [1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+                [1,0,0,2,2,2,7,7,7,7,7,7,7,7,7,7,7,7,7,2,2,2,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
@@ -349,13 +349,8 @@ def gameloop():
         def levelsetup(self):
             self.count = 0
             if (self.level + 1) % 5 == 0:
-                enemies = 0
-                while enemies != ((2*(self.level+1)) + 1):
-                    xpos = random.randint(1,23)
-                    ypos = random.randint(1,23)
-                    if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
-                        self.levels[self.level][xpos][ypos] = random.randint(3,5)
-                        enemies = enemies +1
+                self.levels[self.level][10][10] = 5
+
             else:
                 enemies = 0
                 while enemies != ((2*(self.level+1)) + 1):
@@ -394,7 +389,7 @@ def gameloop():
                             self.enemy_group.add(self.menemy)
                     if char == 5:
                         if self.levelcomplete[self.level] == False:
-                            self.boss = BossEnemy(random.randint(0,10),80,80, i*40, j*40, 40)
+                            self.boss = BossEnemy(random.randint(0,10),100,100, i*40, j*40, 40)
                             self.all_sprites_group.add(self.boss)
                             self.enemy_group.add(self.boss)
                     if char == 6:
@@ -697,15 +692,15 @@ def gameloop():
                 self.gethealth(10)
                 self.previoushealthtime = self.currenthealthtime
 
-
+            if self.current_health < 1:
+                game.score += 100
+                self.kill()
 
             self.move(self.speed_x,self.speed_y)
             self.speed_x = 0
             self.speed_y = 0
 
-            if self.current_health < 1:
-                game.score += 100
-                self.kill()
+
 
             
         #end procedure
@@ -1162,30 +1157,16 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-            self.current_health = 50
+            self.current_health = 1000
             self.maximum_health = health
             self.health_bar_length = 180
-            self.target_health = 100
+            self.target_health = 1000
             self.health_change_speed = 2
             self.health_bar_color = GREEN
             self.health_ratio = self.maximum_health/ self.health_bar_length
             self.direction = direction
+            self.previoushealthtime = pygame.time.get_ticks()
 
-    class HealthBar(pygame.sprite.Sprite):
-        def __init__(self, width, height, x, y, health):
-            self.image = pygame.Surface([width,height])
-            self.image.fill(GREEN)
-            self.current_health = 50
-            self.maximum_health = health
-            self.health_bar_length = 180
-            self.target_health = 100
-            self.health_change_speed = 2
-            self.health_bar_color = GREEN
-            self.health_ratio = self.maximum_health/ self.health_bar_length
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
-    
 
         def gethealth(self, amount):
             if self.target_health < self.maximum_health:
@@ -1228,8 +1209,19 @@ def gameloop():
 
             pygame.draw.rect(screen, self.health_bar_color, health_bar)
             pygame.draw.rect(screen,transition_color, transition_bar)
-            pygame.draw.rect(screen, WHITE, (1005, 45, self.health_bar_length, 25), 4)
+            pygame.draw.rect(screen, WHITE, (self.rect.x, self.rect.y, self.health_bar_length, 25), 4)
 
+        def update(self):
+
+            self.health_ratio = self.maximum_health/ self.health_bar_length
+            self.currenthealthtime = pygame.time.get_ticks()
+            if self.currenthealthtime - self.previoushealthtime > 10000:
+                self.gethealth(10)
+                self.previoushealthtime = self.currenthealthtime
+
+            if self.current_health < 1:
+                game.score += 1000
+                self.kill()
 
 
 
