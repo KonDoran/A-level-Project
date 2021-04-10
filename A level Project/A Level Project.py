@@ -347,7 +347,7 @@ def gameloop():
 
             
         def levelsetup(self):
-        
+            self.count = 0
             if (self.level + 1) % 5 == 0:
                 enemies = 0
                 while enemies != ((2*(self.level+1)) + 1):
@@ -431,10 +431,13 @@ def gameloop():
             if not self.game_over:
                 if len(self.enemy_group) == 0:
                     self.levelcomplete[self.level] = True
-                if self.levelcomplete[self.level] == True:
-                    self.chest = Chest(BROWN, 40, 40, 460,440)
-                    self.all_sprites_group.add(self.chest)
-                    self.chest_group.add(self.chest)
+                    if len(self.chest_group) == 0:
+                        if self.count == 0:
+                            self.count+=1
+                            print(self.count)
+                            self.chest = Chest(BROWN, 40, 40, 460,440, self.level)
+                            self.all_sprites_group.add(self.chest)
+                            self.chest_group.add(self.chest)
                 #print(self.levelcomplete)
                 # Move all the sprites
                 self.all_sprites_group.update()
@@ -449,6 +452,7 @@ def gameloop():
                         self.player.rect.x = 40
                         self.leveldelete()
                         self.levelsetup()
+                        
                     else:
                         self.game_over = True
                         
@@ -538,10 +542,15 @@ def gameloop():
             self.rect.y = y
             self.directionx = 0
             self.directiony = 5
+            self.canshoot = False
+            self.multishot  = False
+            self.swordradius = 50
+            self.bulletcount = 3
             self.previoushealthtime = pygame.time.get_ticks()
             self.previousbullettime = pygame.time.get_ticks()
             self.previousdamagetime = pygame.time.get_ticks()
             self.previousattacktime = pygame.time.get_ticks()
+            self.previousbulletaddtime = pygame.time.get_ticks()
             
         #end procedure
         def gethealth(self, amount):
@@ -642,25 +651,47 @@ def gameloop():
                 self.directionx = 0
                 self.directiony = 6
             if keys[pygame.K_e]:
-                self.currentbullettime = pygame.time.get_ticks()
-                if self.currentbullettime - self.previousbullettime > 500:
-                    bullet = Bullet(RED, self.directionx, self.directiony)
-                    game.bullet_group.add(bullet)
-                    game.all_sprites_group.add(bullet)
-                    self.previousbullettime = self.currentbullettime
+                if self.canshoot == True:
+                    if self.multishot == False:
+                        if self.bulletcount > 0:
+                            self.currentbullettime = pygame.time.get_ticks()
+                            if self.currentbullettime - self.previousbullettime > 1000:
+                                bullet = Bullet(RED, self.directionx, self.directiony)
+                                game.bullet_group.add(bullet)
+                                game.all_sprites_group.add(bullet)
+                                self.bulletcount -= 1
+                                self.previousbullettime = self.currentbullettime
+                    else:
+                        if self.bulletcount > 0:
+                            self.currentbullettime = pygame.time.get_ticks()
+                            if self.currentbullettime - self.previousbullettime > 100:
+                                self.bulletcount -=1
+                                bullet = Bullet(RED, self.directionx, self.directiony)
+                                game.bullet_group.add(bullet)
+                                game.all_sprites_group.add(bullet)
+                                self.previousbullettime = self.currentbullettime
             if keys[pygame.K_SPACE]:
                 if len(game.sword_group) == 0:
                     self.currentattacktime = pygame.time.get_ticks()
                     if self.currentattacktime - self.previousattacktime > 1000:
-                        sword = Sword(GREEN)
+                        sword = Sword(GREEN, self.swordradius)
                         game.sword_group.add(sword)
                         game.all_sprites_group.add(sword)
                         self.previousattacktime = self.currentattacktime
                     
+            self.currentbulletaddtime = pygame.time.get_ticks()
+            if self.currentbulletaddtime - self.previousbulletaddtime > 1000:
+                if self.multishot == False:
+                    self.bulletcount += 1
+                else:
+                    self.bulletcount +=3
+                self.previousbulletaddtime = self.currentbulletaddtime
 
+            
+            if self.bulletcount > 3:
+                self.bulletcount = 3
 
-            #end if
-
+            self.health_ratio = self.maximum_health/ self.health_bar_length
             self.currenthealthtime = pygame.time.get_ticks()
             if self.currenthealthtime -self.previoushealthtime > 10000:
                 self.gethealth(10)
@@ -718,26 +749,34 @@ def gameloop():
         def update(self):
             self.rect.y += self.speedy
             if pygame.sprite.groupcollide(game.bullet_group, game.wall_group, True, False) == True:
-                self.remove()
+                self.kill()
             self.rect.x += self.speedx
             if pygame.sprite.groupcollide(game.bullet_group, game.wall_group, True, False) == True:
-                self.remove()
-            
+                self.kill()
+            if self.rect.x > 1000:
+                self.kill()
+            if self.rect.x < 0:
+                self.kill()
 
     class Sword(pygame.sprite.Sprite):
-        def __init__(self, color):
+        def __init__(self, color, radius):
             #call sprite constructor
             super().__init__()
-            self.image = pygame.Surface((70, 70))
+            self.image = pygame.Surface((radius, radius))
             #self.image.fill(BLACK)
-            pygame.draw.circle(self.image, (color), (35, 35), 35)
+            pygame.draw.circle(self.image, (color), (int(radius/2), int(radius/2)), int(radius/2))
             self.rect = self.image.get_rect() 
             self.rect.center = (0, 0)
             self.previousattacktime = pygame.time.get_ticks()
+            self.radius = radius
 
         def update(self):
-            self.rect.y = game.player.rect.y -15
-            self.rect.x = game.player.rect.x  -15
+            if self.radius == 50:
+                self.rect.y = game.player.rect.y -5
+                self.rect.x = game.player.rect.x  -5
+            else:
+                self.rect.y = game.player.rect.y -15
+                self.rect.x = game.player.rect.x  -15
             self.currentattacktime = pygame.time.get_ticks()
             if self.currentattacktime - self.previousattacktime > 750:
                 self.kill()
@@ -862,7 +901,7 @@ def gameloop():
 
 
     class Chest(pygame.sprite.Sprite):
-        def __init__(self,color, width, height, x, y):
+        def __init__(self,color, width, height, x, y, level):
             super().__init__()
             self.image = pygame.Surface([width,height])
             self.image.fill(color)
@@ -870,9 +909,23 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
+            self.level = level
 
         def update(self):
-            pass
+            chest_hit_group = pygame.sprite.groupcollide(game.chest_group, game.player_group, False, False)
+            for game.chest in chest_hit_group:
+                if self.level == 0:
+                    game.player.canshoot = True
+                if self.level == 1:
+                    game.player.swordradius = 70
+                if self.level == 2:
+                    game.player.maximum_health = 150
+                if self.level == 3:
+                    game.player.multishot = True
+                if self.level == 4:
+                    game.player.maximum_health = 200
+                self.kill()
+
 
     class MeleeEnemy(pygame.sprite.Sprite):
         
@@ -1109,19 +1162,78 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-            self.health = health
+            self.current_health = 50
+            self.maximum_health = health
+            self.health_bar_length = 180
+            self.target_health = 100
+            self.health_change_speed = 2
+            self.health_bar_color = GREEN
+            self.health_ratio = self.maximum_health/ self.health_bar_length
             self.direction = direction
 
     class HealthBar(pygame.sprite.Sprite):
-        def __init__(self, width, height, x, y):
+        def __init__(self, width, height, x, y, health):
             self.image = pygame.Surface([width,height])
             self.image.fill(GREEN)
-            #set the position of the sprite
-            
+            self.current_health = 50
+            self.maximum_health = health
+            self.health_bar_length = 180
+            self.target_health = 100
+            self.health_change_speed = 2
+            self.health_bar_color = GREEN
+            self.health_ratio = self.maximum_health/ self.health_bar_length
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
     
+
+        def gethealth(self, amount):
+            if self.target_health < self.maximum_health:
+                self.target_health += amount
+            if self.target_health >= self.maximum_health:
+                self.target_health = self.maximum_health
+        #endprocedure
+
+        def getdamage(self,amount):
+            if self.target_health > 0:
+                self.target_health -= amount
+            if self.target_health <=0:
+                self.target_health = 0
+
+        def advanced_health(self):
+            transition_width = 0
+            transition_color = RED
+            
+
+            if self.current_health < self.target_health:
+                self.current_health += self.health_change_speed
+                transition_width = int((self.target_health - self.current_health)/ self.health_ratio)
+                transition_color = GREEN
+
+            if self.current_health > self.target_health:
+                self.current_health -= self.health_change_speed
+                transition_width = int((self.target_health - self.current_health)/ self.health_ratio)
+                transition_color = YELLOW
+
+            if self.current_health >= 70:
+                self.health_bar_color = GREEN
+            if self.current_health >= 50 and self.current_health < 70:
+                self.health_bar_color = ORANGE
+            if self.current_health < 30 and self.current_health >=0:
+                self.health_bar_color = RED
+
+            health_bar_width = int(self.current_health/ self.health_ratio)
+            health_bar = pygame.Rect(1005,45, health_bar_width, 25)
+            transition_bar = pygame.Rect(health_bar.right, 45, transition_width, 25)
+
+            pygame.draw.rect(screen, self.health_bar_color, health_bar)
+            pygame.draw.rect(screen,transition_color, transition_bar)
+            pygame.draw.rect(screen, WHITE, (1005, 45, self.health_bar_length, 25), 4)
+
+
+
+
+
     g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
     game = Game()
     
