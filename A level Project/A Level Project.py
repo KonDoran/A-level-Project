@@ -181,7 +181,7 @@ def gameloop():
         def __init__(self):
             self.score = 0
             self.game_over = False
-            self.level = 0
+            self.level = 4
             # Create a list of all sprites
             self.all_sprites_group = pygame.sprite.Group()
             self.outsidewall_group = pygame.sprite.Group()
@@ -492,7 +492,7 @@ def gameloop():
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
-                self.enemy_group.update()
+                #self.enemy_group.update()
                 if (self.level + 1) % 5 == 0:
                     self.boss.advanced_health()
                 #current = self.player.start + self.player.path[vec2int(self.player.start)]
@@ -546,8 +546,8 @@ def gameloop():
             self.rect.y = y
             self.directionx = 0
             self.directiony = 5
-            self.canshoot = False
-            self.multishot  = False
+            self.canshoot = True
+            self.multishot  = True
             self.swordradius = 50
             self.bulletcount = 3
             self.previoushealthtime = pygame.time.get_ticks()
@@ -1190,7 +1190,7 @@ def gameloop():
                     self.previousattacktime = self.currentattacktime
             
             pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
-            print(pygame.rect.clipline(game.player.rect.x,game.player.rect.y,self.rect.x,self.rect.y))
+            
  
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
@@ -1326,10 +1326,56 @@ def gameloop():
             if self.current_health < 600 and self.current_health >= 300:
                 #move towards the player and shoot projectiles
                 self.movetoplayer(game.player)
+                xdiff = (game.player.rect.x-5) - (self.rect.x+80)
+                ydiff = (game.player.rect.y-5) - (self.rect.y+80)
+                magnitude = math.hypot(xdiff,ydiff) 
+                #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
+                
+                #self.degrees = math.degrees(self.angle)
+                if magnitude > 60:
+                    xspeed = xdiff * 0.01
+                    yspeed = ydiff * 0.01
+                else:
+                    xspeed = xdiff * 0.05
+                    yspeed = ydiff * 0.05
+
+                self.currentattacktime = pygame.time.get_ticks()
+                if self.currentattacktime - self.previousattacktime > 500:
+                    game.ebullet = EnemyBullet(RED, xspeed, yspeed, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    self.previousattacktime = self.currentattacktime
             if self.current_health < 300:
                 #shoot projectiles in all directions and spawn in enemies
                 self.movetoplayer(game.player)
-                while game.bosscount != 10:
+                self.currentattacktime = pygame.time.get_ticks()
+                if self.currentattacktime - self.previousattacktime > 1000:
+                    game.ebullet = EnemyBullet(RED, 3, 0, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, 3, 3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, 3, -3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, -3, 0, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, -3, 3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, -3, -3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, 0, 3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    game.ebullet = EnemyBullet(RED, 0, -3, self.rect.x+80, self.rect.y+80)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    self.previousattacktime = self.currentattacktime
+                while game.bosscount != 5:
                     xpos = random.randint(1,23)
                     ypos = random.randint(1,23)
                     if game.levels[game.level][xpos][ypos] !=1 and game.levels[game.level][xpos][ypos] != 2 and game.levels[game.level][xpos][ypos] != 7:
@@ -1337,7 +1383,7 @@ def gameloop():
                         game.all_sprites_group.add(game.menemy)
                         game.enemy_group.add(game.menemy)
                         game.bosscount = game.bosscount +1
-
+                
 
             enemybullet_hit_group = pygame.sprite.groupcollide(game.boss_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
