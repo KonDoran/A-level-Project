@@ -492,6 +492,7 @@ def gameloop():
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
+                self.enemy_group.update()
                 if (self.level + 1) % 5 == 0:
                     self.boss.advanced_health()
                 #current = self.player.start + self.player.path[vec2int(self.player.start)]
@@ -1168,19 +1169,29 @@ def gameloop():
             
             if self.is_close() == True:
 
-                xdiff = (game.player.rect.x) - (self.rect.x)
-                ydiff = (game.player.rect.y) - (self.rect.y)
-                #magnitude = math.hypot(xdiff,ydiff) 
+                xdiff = (game.player.rect.x-5) - (self.rect.x+20)
+                ydiff = (game.player.rect.y-5) - (self.rect.y+20)
+                magnitude = math.hypot(xdiff,ydiff) 
                 #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
                 
                 #self.degrees = math.degrees(self.angle)
+                if magnitude > 60:
+                    xspeed = xdiff * 0.01
+                    yspeed = ydiff * 0.01
+                else:
+                    xspeed = xdiff * 0.05
+                    yspeed = ydiff * 0.05
+
                 self.currentattacktime = pygame.time.get_ticks()
                 if self.currentattacktime - self.previousattacktime > 1000:
-                    game.ebullet = EnemyBullet(RED, xdiff*0.01, ydiff*0.01, self.rect.x+10, self.rect.y+10)
+                    game.ebullet = EnemyBullet(RED, xspeed, yspeed, self.rect.x+20, self.rect.y+20)
                     game.all_sprites_group.add(game.ebullet)
                     game.enemybullet_group.add(game.ebullet)
                     self.previousattacktime = self.currentattacktime
-                    
+            
+            pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
+            print(pygame.rect.clipline(game.player.rect.x,game.player.rect.y,self.rect.x,self.rect.y))
+ 
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
                 self.health -= 20
@@ -1206,7 +1217,10 @@ def gameloop():
                     game.key_group.add(gamekey)
                     self.kill()
 
-            
+        
+        def line(self):
+            pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
+
         #end procedure
         def gethealth(self):
             return self.health
