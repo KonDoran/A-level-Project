@@ -389,7 +389,7 @@ def gameloop():
                             self.enemy_group.add(self.menemy)
                     if char == 5:
                         if self.levelcomplete[self.level] == False:
-                            self.boss = BossEnemy(random.randint(0,10),160,160, i*40, j*40, 40)
+                            self.boss = BossEnemy(random.randint(0,10),160,160, i*40, j*40, 1000)
                             self.all_sprites_group.add(self.boss)
                             self.enemy_group.add(self.boss)
                     if char == 6:
@@ -1158,15 +1158,17 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-            self.current_health = 1000
+            self.current_health = 999
             self.maximum_health = health
-            self.health_bar_length = 180
+            self.health_bar_length = 200
             self.target_health = 1000
             self.health_change_speed = 2
             self.health_bar_color = GREEN
             self.health_ratio = self.maximum_health/ self.health_bar_length
             self.direction = direction
             self.previoushealthtime = pygame.time.get_ticks()
+            self.previousdamagetime = pygame.time.get_ticks()
+            self.previousattacktime = pygame.time.get_ticks()
 
 
         def gethealth(self, amount):
@@ -1205,12 +1207,12 @@ def gameloop():
                 self.health_bar_color = RED
 
             health_bar_width = int(self.current_health/ self.health_ratio)
-            health_bar = pygame.Rect(1005,45, health_bar_width, 25)
-            transition_bar = pygame.Rect(health_bar.right, 45, transition_width, 25)
+            health_bar = pygame.Rect(self.rect.x-20,self.rect.y-40, health_bar_width, 25)
+            transition_bar = pygame.Rect(health_bar.right, self.rect.y-40, transition_width, 25)
 
             pygame.draw.rect(screen, self.health_bar_color, health_bar)
             pygame.draw.rect(screen,transition_color, transition_bar)
-            pygame.draw.rect(screen, WHITE, (self.rect.x, self.rect.y, self.health_bar_length, 25), 4)
+            pygame.draw.rect(screen, WHITE, (self.rect.x-20, self.rect.y-40, self.health_bar_length, 25), 4)
 
         def update(self):
 
@@ -1223,6 +1225,92 @@ def gameloop():
             if self.current_health < 1:
                 game.score += 1000
                 self.kill()
+
+            if self.current_health >= 600:
+                #move towards the player no matter the range
+                self.movetoplayer(game.player)
+            if self.current_health < 600 and self.current_health >= 300:
+                #move towards the player and shoot projectiles
+                self.movetoplayer(game.player)
+            if self.current_health < 300:
+                #shoot projectiles in all directions and spawn in enemies
+                self.movetoplayer(game.player)
+                
+
+            enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
+            for self in enemybullet_hit_group:
+                self.getdamage(5)
+            enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
+            for self in enemysword_hit_group:
+                self.currentdamagetime = pygame.time.get_ticks()
+                if self.currentdamagetime - self.previousdamagetime > 1000:
+                    self.getdamage(20)
+                    self.previousdamagetime = self.currentdamagetime
+
+
+            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
+            for game.player in player_hit_group:
+                self.currentattacktime = pygame.time.get_ticks()
+                if self.currentattacktime - self.previousattacktime > 2000:
+                    game.player.getdamage(30)
+                    self.previousattacktime = self.currentattacktime
+
+
+
+        def is_close(self):
+            lengthx = self.rect.x - game.player.rect.x
+            lengthy = self.rect.y - game.player.rect.y
+            distance = math.sqrt((lengthx ** 2) + (lengthy ** 2))
+            if distance < 300:
+                return True
+            else:
+                return False
+
+
+
+        
+        def movetoplayer(self, Player):
+
+            if Player.rect.x  > self.rect.x:
+                self.speed_x = 1
+            if Player.rect.x  < self.rect.x:
+                self.speed_x = -1
+            if Player.rect.y  > self.rect.y:
+                self.speed_y = 1
+            if Player.rect.y < self.rect.y:
+                self.speed_y = -1
+
+             # Move along x axis
+            self.rect.x += self.speed_x
+
+            # Did enemy hit a wall
+            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)  # false so it doesn't remove the wall, true would
+            for wall in block_hit_list:
+                # If moving right, place enemy to the left side of wall
+
+                if self.speed_x > 0:
+                    self.rect.right = wall.rect.left
+                    
+                else:
+                    #  if  moving left, do the opposite.
+                    self.rect.left = wall.rect.right
+                    
+
+
+            # Move along y axis
+            self.rect.y += self.speed_y
+
+            # Did enemy hit a wall
+            block_hit_list = pygame.sprite.spritecollide(self, game.wall_group, False)
+            for wall in block_hit_list:
+                # Do same as above but on the y axis
+                if self.speed_y > 0:
+                    self.rect.bottom = wall.rect.top
+
+                else:
+                    self.rect.top = wall.rect.bottom
+
+
 
 
 
