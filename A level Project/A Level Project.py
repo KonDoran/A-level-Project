@@ -181,7 +181,7 @@ def gameloop():
         def __init__(self):
             self.score = 0
             self.game_over = False
-            self.level = 4
+            self.level = 0
             # Create a list of all sprites
             self.all_sprites_group = pygame.sprite.Group()
             self.outsidewall_group = pygame.sprite.Group()
@@ -196,6 +196,8 @@ def gameloop():
             self.sword_group = pygame.sprite.Group()
             self.spike_group = pygame.sprite.Group()
             self.chest_group = pygame.sprite.Group()
+            self.boss_group = pygame.sprite.Group()
+            self.enemybullet_group = pygame.sprite.Group()
             self.levelcomplete = [False, False, False, False, False]
             self.level1 = [
                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -316,21 +318,21 @@ def gameloop():
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,2,2,7,7,7,7,7,7,7,7,7,7,7,2,2,0,0,0,0,1],
-                [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,6],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,6],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,6],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,1],
-                [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1],
-                [1,0,0,0,0,2,2,7,7,7,7,7,7,7,7,7,7,7,2,2,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,2,2,7,7,7,7,7,7,7,7,7,2,2,0,0,0,0,0,1],
+                [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,6],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,6],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,6],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
+                [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
+                [1,0,0,0,0,0,2,2,7,7,7,7,7,7,7,7,7,2,2,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -348,6 +350,7 @@ def gameloop():
             
         def levelsetup(self):
             self.count = 0
+            self.bosscount = 0
             if (self.level + 1) % 5 == 0:
                 self.levels[self.level][10][10] = 5
 
@@ -391,7 +394,7 @@ def gameloop():
                         if self.levelcomplete[self.level] == False:
                             self.boss = BossEnemy(random.randint(0,10),160,160, i*40, j*40, 1000)
                             self.all_sprites_group.add(self.boss)
-                            self.enemy_group.add(self.boss)
+                            self.boss_group.add(self.boss)
                     if char == 6:
                         if self.levelcomplete[self.level] == False:
                             self.door = Door(PURPLE,40,40,i*40, j*40, i, j)
@@ -425,7 +428,9 @@ def gameloop():
         def runlogic(self):
             if not self.game_over:
                 if len(self.enemy_group) == 0:
-                    self.levelcomplete[self.level] = True
+                    if len(self.boss_group) == 0:
+                        self.levelcomplete[self.level] = True
+                if self.levelcomplete[self.level] == True:
                     if len(self.chest_group) == 0:
                         if self.count == 0:
                             self.count+=1
@@ -433,7 +438,7 @@ def gameloop():
                             self.chest = Chest(BROWN, 40, 40, 460,440, self.level)
                             self.all_sprites_group.add(self.chest)
                             self.chest_group.add(self.chest)
-                #print(self.levelcomplete)
+                print(self.levelcomplete)
                 # Move all the sprites
                 self.all_sprites_group.update()
                 if len(self.player_group) == 0:
@@ -463,8 +468,7 @@ def gameloop():
         def display(self, screen):
             # background image.
             screen.fill(BLACK)
-            self.player.advanced_health()
-            self.boss.advanced_health()
+            
             #screen.blit(BACKGROUND_IMAGE,(0,0))
             if self.game_over:
                 screen.fill(BLACK)
@@ -479,6 +483,7 @@ def gameloop():
                 score = font.render('SCORE:'+str(self.getscore()), 1, WHITE)
                 money = font.render('MONEY:'+str(self.player.getmoney()), 1, WHITE)
                 keys = font.render('KEYS:'+str(self.player.getkeys()), 1, WHITE)
+                self.player.advanced_health()
                 health = font.render(str(self.player.current_health), 1, WHITE)
                 screen.blit(score, (1050,500))
                 screen.blit(money, (1050,550))
@@ -487,6 +492,8 @@ def gameloop():
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
+                if (self.level + 1) % 5 == 0:
+                    self.boss.advanced_health()
                 #current = self.player.start + self.player.path[vec2int(self.player.start)]
                 #while current != self.player.goal:
                     #x = current.x * TILESIZE + TILESIZE / 2
@@ -754,6 +761,37 @@ def gameloop():
             if self.rect.x < 0:
                 self.kill()
 
+
+
+    class EnemyBullet(pygame.sprite.Sprite):
+        def __init__(self, color, speedx, speedy, x, y):
+            super().__init__()
+            self.image = pygame.Surface([6,4])
+            self.image.fill(color)
+            self.rect = self.image.get_rect()
+            self.speedx = speedx
+            self.speedy = speedy
+            self.rect.y = x
+            self.rect.x = y
+
+        def update(self):
+
+            self.rect.y += self.speedy
+            if pygame.sprite.groupcollide(game.enemybullet_group, game.wall_group, True, False) == True:
+                self.kill()
+            self.rect.x += self.speedx
+            if pygame.sprite.groupcollide(game.enemybullet_group, game.wall_group, True, False) == True:
+                self.kill()
+            if self.rect.x > 1000:
+                self.kill()
+            if self.rect.x < 0:
+                self.kill()
+            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemybullet_group, False, True)
+            for game.player in player_hit_group:
+                game.player.getdamage(5)
+                
+
+
     class Sword(pygame.sprite.Sprite):
         def __init__(self, color, radius):
             #call sprite constructor
@@ -858,8 +896,12 @@ def gameloop():
         #end procedure
 
         def update(self):
-            if  game.player.gamekeys >= ((2*(game.level+1)) + 1):
-                self.kill()
+            if (game.level + 1) % 5 != 0:
+                if  game.player.gamekeys >= ((2*(game.level+1)) + 1):
+                    self.kill()
+            else:
+                if len(game.boss_group) == 0:
+                    self.kill()
 
 
     class Spikes(pygame.sprite.Sprite):
@@ -1110,6 +1152,7 @@ def gameloop():
             self.direction = direction
             self.previousdamagetime = pygame.time.get_ticks()
             self.previousattacktime = pygame.time.get_ticks()
+            self.angle = 180
             
         #end procedure
         def update(self):
@@ -1137,7 +1180,15 @@ def gameloop():
                     gamekey = Key(PINK, self.rect.x + 2, self.rect.y + 9)
                     game.all_sprites_group.add(gamekey)
                     game.key_group.add(gamekey)
-                    self.kill()     
+                    self.kill()
+
+            if self.is_close == True:
+                xdiff = (game.player.rect.x+20) - (self.rect.x +20)
+                ydiff = (game.player.rect.y+20) - (self.rect.y +20)
+                self.angle = math.atan2(ydiff,xdiff)
+                self.degrees = math.degrees(self.angle)
+                game.ebullet = EnemyBullet(RED, math.cos(self.angle))
+                    
         #end procedure
         def gethealth(self):
             return self.health
@@ -1146,6 +1197,17 @@ def gameloop():
         def sethealth(self, newhealth):
             self.health = newhealth
         #endfunction
+
+        def is_close(self):
+            lengthx = self.rect.x - game.player.rect.x
+            lengthy = self.rect.y - game.player.rect.y
+            distance = math.sqrt((lengthx ** 2) + (lengthy ** 2))
+            if distance < 400:
+                return True
+            else:
+                return False
+
+
 
     class BossEnemy(pygame.sprite.Sprite):
         def __init__(self, direction, width, height, x, y, health):
@@ -1199,20 +1261,20 @@ def gameloop():
                 transition_width = int((self.target_health - self.current_health)/ self.health_ratio)
                 transition_color = YELLOW
 
-            if self.current_health >= 70:
+            if self.current_health >= 700:
                 self.health_bar_color = GREEN
-            if self.current_health >= 50 and self.current_health < 70:
+            if self.current_health >= 500 and self.current_health < 700:
                 self.health_bar_color = ORANGE
-            if self.current_health < 30 and self.current_health >=0:
+            if self.current_health < 300 and self.current_health >=0:
                 self.health_bar_color = RED
 
             health_bar_width = int(self.current_health/ self.health_ratio)
             health_bar = pygame.Rect(self.rect.x-20,self.rect.y-40, health_bar_width, 25)
             transition_bar = pygame.Rect(health_bar.right, self.rect.y-40, transition_width, 25)
-
-            pygame.draw.rect(screen, self.health_bar_color, health_bar)
-            pygame.draw.rect(screen,transition_color, transition_bar)
-            pygame.draw.rect(screen, WHITE, (self.rect.x-20, self.rect.y-40, self.health_bar_length, 25), 4)
+            if self.current_health > 0:
+                pygame.draw.rect(screen, self.health_bar_color, health_bar)
+                pygame.draw.rect(screen,transition_color, transition_bar)
+                pygame.draw.rect(screen, WHITE, (self.rect.x-20, self.rect.y-40, self.health_bar_length, 25), 4)
 
         def update(self):
 
@@ -1235,12 +1297,20 @@ def gameloop():
             if self.current_health < 300:
                 #shoot projectiles in all directions and spawn in enemies
                 self.movetoplayer(game.player)
-                
+                while game.bosscount != 10:
+                    xpos = random.randint(1,23)
+                    ypos = random.randint(1,23)
+                    if game.levels[game.level][xpos][ypos] !=1 and game.levels[game.level][xpos][ypos] != 2 and game.levels[game.level][xpos][ypos] != 7:
+                        game.menemy = MeleeEnemy(random.randint(0,10),40,40, xpos*40, ypos*40, 40)
+                        game.all_sprites_group.add(game.menemy)
+                        game.enemy_group.add(game.menemy)
+                        game.bosscount = game.bosscount +1
 
-            enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
+
+            enemybullet_hit_group = pygame.sprite.groupcollide(game.boss_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
                 self.getdamage(5)
-            enemysword_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.sword_group, False, False)
+            enemysword_hit_group = pygame.sprite.groupcollide(game.boss_group, game.sword_group, False, False)
             for self in enemysword_hit_group:
                 self.currentdamagetime = pygame.time.get_ticks()
                 if self.currentdamagetime - self.previousdamagetime > 1000:
@@ -1248,7 +1318,7 @@ def gameloop():
                     self.previousdamagetime = self.currentdamagetime
 
 
-            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
+            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.boss_group, False, False)
             for game.player in player_hit_group:
                 self.currentattacktime = pygame.time.get_ticks()
                 if self.currentattacktime - self.previousattacktime > 2000:
