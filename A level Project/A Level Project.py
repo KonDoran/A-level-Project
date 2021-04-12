@@ -438,7 +438,7 @@ def gameloop():
                             self.chest = Chest(BROWN, 40, 40, 460,440, self.level)
                             self.all_sprites_group.add(self.chest)
                             self.chest_group.add(self.chest)
-                print(self.levelcomplete)
+                #print(self.levelcomplete)
                 # Move all the sprites
                 self.all_sprites_group.update()
                 if len(self.player_group) == 0:
@@ -771,8 +771,8 @@ def gameloop():
             self.rect = self.image.get_rect()
             self.speedx = speedx
             self.speedy = speedy
-            self.rect.y = x
-            self.rect.x = y
+            self.rect.y = y
+            self.rect.x = x
 
         def update(self):
 
@@ -788,7 +788,16 @@ def gameloop():
                 self.kill()
             player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemybullet_group, False, True)
             for game.player in player_hit_group:
-                game.player.getdamage(5)
+                game.player.getdamage(10)
+            
+            enemybullet_hit_group = pygame.sprite.groupcollide(game.enemybullet_group, game.bullet_group, False, True)
+            for self in enemybullet_hit_group:
+                self.kill()
+                game.score +=20
+            enemysword_hit_group = pygame.sprite.groupcollide(game.enemybullet_group, game.sword_group, False, False)
+            for self in enemysword_hit_group:
+                self.kill()
+                game.score +=20
                 
 
 
@@ -1157,6 +1166,21 @@ def gameloop():
         #end procedure
         def update(self):
             
+            if self.is_close() == True:
+
+                xdiff = (game.player.rect.x) - (self.rect.x)
+                ydiff = (game.player.rect.y) - (self.rect.y)
+                #magnitude = math.hypot(xdiff,ydiff) 
+                #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
+                
+                #self.degrees = math.degrees(self.angle)
+                self.currentattacktime = pygame.time.get_ticks()
+                if self.currentattacktime - self.previousattacktime > 1000:
+                    game.ebullet = EnemyBullet(RED, xdiff*0.01, ydiff*0.01, self.rect.x+10, self.rect.y+10)
+                    game.all_sprites_group.add(game.ebullet)
+                    game.enemybullet_group.add(game.ebullet)
+                    self.previousattacktime = self.currentattacktime
+                    
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
             for self in enemybullet_hit_group:
                 self.health -= 20
@@ -1182,13 +1206,7 @@ def gameloop():
                     game.key_group.add(gamekey)
                     self.kill()
 
-            if self.is_close == True:
-                xdiff = (game.player.rect.x+20) - (self.rect.x +20)
-                ydiff = (game.player.rect.y+20) - (self.rect.y +20)
-                self.angle = math.atan2(ydiff,xdiff)
-                self.degrees = math.degrees(self.angle)
-                game.ebullet = EnemyBullet(RED, math.cos(self.angle))
-                    
+            
         #end procedure
         def gethealth(self):
             return self.health
