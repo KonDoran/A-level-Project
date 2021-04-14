@@ -28,7 +28,7 @@ GRIDHEIGHT = 25
 WIDTH = TILESIZE * GRIDWIDTH
 HEIGHT = TILESIZE * GRIDHEIGHT
 HS_FILE = "highscore.txt"
-hs_path = os.paath.join(current_path, 'highscore')
+hs_path = os.path.join(current_path, 'highscore')
 icon_dir = os.path.join(current_path, 'icons')
 pygame.init()
 
@@ -201,6 +201,7 @@ def gameloop():
             self.chest_group = pygame.sprite.Group()
             self.boss_group = pygame.sprite.Group()
             self.enemybullet_group = pygame.sprite.Group()
+            self.load_data()
             self.chestunlocked = [False, False, False, False, False]
             self.previoustexttime = pygame.time.get_ticks()
             self.levelcomplete = [False, False, False, False, False]
@@ -352,7 +353,15 @@ def gameloop():
             self.all_sprites_group.add(self.player)
             self.player_group.add(self.player)
 
-            
+        def load_data(self):
+            #load high score
+            f = open(os.path.join(hs_path, HS_FILE), "r")
+            try:
+                self.highscore = int(f.readline())
+                #print(self.highscore)
+            except:
+                self.highscore = 0
+                #print(self.highscore)
         def levelsetup(self):
             self.count = 0
             self.bosscount = 0
@@ -364,7 +373,7 @@ def gameloop():
                 while enemies != ((2*(self.level+1)) + 1):
                     xpos = random.randint(1,23)
                     ypos = random.randint(1,23)
-                    if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2:
+                    if self.levels[self.level][xpos][ypos] !=1 and self.levels[self.level][xpos][ypos] != 2 and self.levels[self.level][xpos][ypos] != 7:
                         self.levels[self.level][xpos][ypos] = random.randint(3,4)
                         enemies = enemies +1
                     
@@ -474,15 +483,24 @@ def gameloop():
         def display(self, screen):
             # background image.
             screen.fill(BLACK)
-            
             #screen.blit(BACKGROUND_IMAGE,(0,0))
             if self.game_over:
+
                 screen.fill(BLACK)
                 font1 = pygame.font.Font(None, 74)
                 font2 = pygame.font.Font(None, 48)
+                font = pygame.font.Font(None, 48)
                 text = font1.render('GAME OVER', 1, WHITE)
                 score = font2.render('SCORE:'+str(self.getscore()), 1, WHITE)
-                screen.blit(text, (440,300))
+                self.hs = font.render('HIGHSCORE:'+str(self.highscore),1, WHITE)
+                self.text_rect = self.hs.get_rect(center=((screen_width)/2, 700))
+                text_rect2 = text.get_rect(center=((screen_width)/2, 300))
+                if self.score > self.highscore:
+                    self.highscore = self.score
+                    f = open(os.path.join(hs_path, HS_FILE), "w")
+                    f.write(str(self.score))
+                screen.blit(self.hs, self.text_rect)
+                screen.blit(text, text_rect2)
                 screen.blit(score, (520,500))
             if not self.game_over:
                 font = pygame.font.Font(None, 24)
