@@ -18,6 +18,7 @@ PINK = (255,20,147)
 PURPLE = (75,0,130)
 BROWN = (150, 75, 0)
 ORANGE = (230,165,0)
+BLUE = (30,144,255)
 LIGHTBLUE = (173, 216, 240)
 GREY = (180,180,180)
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'Menu background.png'))
@@ -26,6 +27,8 @@ GRIDWIDTH = 25
 GRIDHEIGHT = 25
 WIDTH = TILESIZE * GRIDWIDTH
 HEIGHT = TILESIZE * GRIDHEIGHT
+HS_FILE = "highscore.txt"
+hs_path = os.paath.join(current_path, 'highscore')
 icon_dir = os.path.join(current_path, 'icons')
 pygame.init()
 
@@ -181,7 +184,7 @@ def gameloop():
         def __init__(self):
             self.score = 0
             self.game_over = False
-            self.level = 4
+            self.level = 0
             # Create a list of all sprites
             self.all_sprites_group = pygame.sprite.Group()
             self.outsidewall_group = pygame.sprite.Group()
@@ -198,6 +201,8 @@ def gameloop():
             self.chest_group = pygame.sprite.Group()
             self.boss_group = pygame.sprite.Group()
             self.enemybullet_group = pygame.sprite.Group()
+            self.chestunlocked = [False, False, False, False, False]
+            self.previoustexttime = pygame.time.get_ticks()
             self.levelcomplete = [False, False, False, False, False]
             self.level1 = [
                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -447,6 +452,7 @@ def gameloop():
                 if self.player.rect.x > 1000:
                     if self.level != (len(self.levels)-1):
                         self.levelcomplete[self.level] = True
+                        self.chestunlocked[self.level] = False
                         self.level += 1
                         self.player.gamekeys = 0
                         self.player.rect.x = 40
@@ -457,7 +463,7 @@ def gameloop():
                         self.game_over = True
                         
                 elif self.player.rect.x < 0:
-                    
+                    self.chestunlocked[self.level] = False
                     self.level -= 1
                     self.leveldelete()
                     self.player.rect.x = 960
@@ -481,17 +487,43 @@ def gameloop():
             if not self.game_over:
                 font = pygame.font.Font(None, 24)
                 score = font.render('SCORE:'+str(self.getscore()), 1, WHITE)
-                money = font.render('MONEY:'+str(self.player.getmoney()), 1, WHITE)
                 keys = font.render('KEYS:'+str(self.player.getkeys()), 1, WHITE)
                 self.player.advanced_health()
                 health = font.render(str(self.player.current_health), 1, WHITE)
                 screen.blit(score, (1050,500))
-                screen.blit(money, (1050,550))
-                screen.blit(keys, (1050,600))
+                screen.blit(keys, (1050,550))
                 screen.blit(health, (1081, 51))
                 # --- Drawing code should go here
                 
                 self.all_sprites_group.draw(screen)
+                if self.chestunlocked[self.level] == True:
+                    if self.level == 0:
+                        font3 = pygame.font.Font(None, 48)
+                        msg = font3.render('FIREBALL UNLOCKED', 1, BLUE)
+                        text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
+                        screen.blit(msg, text_rect)
+                    if self.level == 1:
+                        font3 = pygame.font.Font(None, 48)
+                        msg = font3.render('SWORD RADIUS INCREASED', 1, BLUE)
+                        text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
+                        screen.blit(msg, text_rect)
+                    if self.level == 2:
+                        font3 = pygame.font.Font(None, 48)
+                        msg = font3.render('HEALTH INCREASED', 1, BLUE)
+                        text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
+                        screen.blit(msg, text_rect)
+                    if self.level == 3:
+                        font3 = pygame.font.Font(None, 48)
+                        msg = font3.render('MULTISHOT UNLOCKED', 1, BLUE)
+                        text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
+                        screen.blit(msg, text_rect)
+                    if self.level == 4:
+                        font3 = pygame.font.Font(None, 48)
+                        msg = font3.render('BOSS COMPLETE', 1, BLUE)
+                        text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
+                        screen.blit(msg, text_rect)
+
+                #if self.secondchest == True
                 #self.enemy_group.update()
                 if (self.level + 1) % 5 == 0:
                     self.boss.advanced_health()
@@ -546,8 +578,8 @@ def gameloop():
             self.rect.y = y
             self.directionx = 0
             self.directiony = 5
-            self.canshoot = True
-            self.multishot  = True
+            self.canshoot = False
+            self.multishot  = False
             self.swordradius = 50
             self.bulletcount = 3
             self.previoushealthtime = pygame.time.get_ticks()
@@ -908,10 +940,12 @@ def gameloop():
         def update(self):
             if (game.level + 1) % 5 != 0:
                 if  game.player.gamekeys >= ((2*(game.level+1)) + 1):
-                    self.kill()
+                    if game.chestunlocked[game.level] == True:
+                        self.kill()
             else:
                 if len(game.boss_group) == 0:
-                    self.kill()
+                    if game.chestunlocked[game.level] == True:
+                        self.kill()
 
 
     class Spikes(pygame.sprite.Sprite):
@@ -964,14 +998,17 @@ def gameloop():
             for game.chest in chest_hit_group:
                 if self.level == 0:
                     game.player.canshoot = True
+                    
                 if self.level == 1:
                     game.player.swordradius = 70
+                    
                 if self.level == 2:
-                    game.player.maximum_health = 150
+                    game.player.maximum_health = 200
+                    
                 if self.level == 3:
                     game.player.multishot = True
-                if self.level == 4:
-                    game.player.maximum_health = 200
+                
+                game.chestunlocked[game.level] = True
                 self.kill()
 
 
