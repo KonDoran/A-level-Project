@@ -240,7 +240,7 @@ def gameloop():
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
-            self.level = 0
+            self.level = 4
             # Create a different sprite groups to be used for collisions and updates
             self.all_sprites_group = pygame.sprite.Group()
             self.outsidewall_group = pygame.sprite.Group()
@@ -335,10 +335,10 @@ def gameloop():
                 [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,2,2,7,7,2,2,2,1],
                 [1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1],
-                [6,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,7,0,0,0,0,0,0,0,6],
-                [6,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,7,0,0,0,0,0,0,0,6],
-                [6,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,7,0,0,0,0,0,0,0,6],
-                [1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,7,0,0,0,0,0,0,0,1],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,6],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,6],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,6],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,1],
                 [1,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,1],
@@ -363,9 +363,9 @@ def gameloop():
                 [1,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
                 [1,2,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
-                [6,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,2,0,0,0,0,0,6],
-                [6,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,2,0,0,0,0,0,6],
-                [6,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,2,0,0,0,0,0,6],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,6],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,6],
+                [6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,6],
                 [1,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1],
                 [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,2,2,7,7,7,7,7,1],
                 [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,1],
@@ -712,8 +712,8 @@ def gameloop():
             self.directionx = 0
             self.directiony = 5
             #Set player attribute that are unlocked after opening chests
-            self.canshoot = False
-            self.multishot  = False
+            self.canshoot = True
+            self.multishot  = True
             self.swordradius = 50
             self.bulletcount = 3
             #Set timers to be used for attacks
@@ -1063,21 +1063,6 @@ def gameloop():
                 self.kill()
                 
 
-
-
-
-
-    #class Portal(pygame.sprite.Sprite):
-        #def __init__(self,color,x,y):
-            #super().__init__()
-            #self.image = pygame.Surface([40,40])
-            #self.image.fill(color)
-            #self.rect = self.image.get_rect()
-            #self.rect.y = y
-            #self.rect.x = x
-        #end procedure    
-        #def update(self):
-            #pass
 
     #Wall class to create boundaries
     class Wall(pygame.sprite.Sprite):
@@ -1616,11 +1601,11 @@ def gameloop():
                 self.kill()
 
             #When the health of the boss is greater than 60% then just move towards the player
-            if self.current_health >= 600:
+            if self.current_health >= 700:
                 #move towards the player no matter the range
                 self.movetoplayer(game.player)
             #When the health is lower than 60% but above 30% then move around and shoot at the player
-            if self.current_health < 600 and self.current_health >= 300:
+            if self.current_health < 700 and self.current_health >= 400:
                 #move towards the player and shoot projectiles
                 #Calculate y distance and x distance as well as distance
                 self.movetoplayer(game.player)
@@ -1639,7 +1624,7 @@ def gameloop():
                     yspeed = ydiff * 0.05
                 #Every 1 second an enemy bullet object is created travelling in the direction using the xspeed and yspeed.
                 self.currentattacktime = pygame.time.get_ticks()
-                if self.currentattacktime - self.previousattacktime > 500:
+                if self.currentattacktime - self.previousattacktime > 1500:
                     game.ebullet = EnemyBullet(RED, xspeed, yspeed, self.rect.x+80, self.rect.y+80)
                     game.all_sprites_group.add(game.ebullet)
                     game.enemybullet_group.add(game.ebullet)
