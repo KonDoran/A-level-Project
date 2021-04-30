@@ -621,6 +621,7 @@ def gameloop():
                 screen.blit(health, (1081, 51))
                 # --- Drawing code for sprites
                 self.all_sprites_group.draw(screen)
+                self.boss_group.draw(screen)
                 #Check which chest has been unlocked and display text until player moves to next level
                 if self.chestunlocked[self.level] == True:
                     if self.level == 0:
