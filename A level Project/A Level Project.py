@@ -240,7 +240,7 @@ def gameloop():
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
-            self.level = 4
+            self.level = 0
             # Create a different sprite groups to be used for collisions and updates
             self.all_sprites_group = pygame.sprite.Group()
             self.outsidewall_group = pygame.sprite.Group()
@@ -713,8 +713,8 @@ def gameloop():
             self.directionx = 0
             self.directiony = 5
             #Set player attribute that are unlocked after opening chests
-            self.canshoot = True
-            self.multishot  = True
+            self.canshoot = False
+            self.multishot  = False
             self.swordradius = 50
             self.bulletcount = 3
             #Set timers to be used for attacks
