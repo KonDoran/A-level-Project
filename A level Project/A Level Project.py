@@ -431,7 +431,7 @@ def gameloop():
                 self.highscore = 0
                 #print(self.highscore)
             #load spritesheet
-            self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
+            
         #end method
 
         #Create a method that creates all the objects according to the 2D array in the game class.
@@ -704,8 +704,9 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = pygame.Surface([width,height])
-            self.image.fill(color)
+            self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
+            self.image = self.playerspritesheet.get_image(80,1200,80,100)
+            #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             #Set the current and maximum health of the player to be used for health bar
