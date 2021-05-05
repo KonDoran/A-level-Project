@@ -1158,8 +1158,8 @@ def gameloop():
         def __init__(self, color, width, height, x, y, posx, posy):
             super().__init__()
             #Use sprite constructor
-            self.image = pygame.Surface([width,height])
-            self.image.fill(color)
+            self.image = pygame.image.load(os.path.join(image_path, "spike down.png"))
+            #self.image.fill(color)
             self.rect = self.image.get_rect()
             #set the coordinates
             self.rect.x = x
@@ -1178,13 +1178,13 @@ def gameloop():
             if self.currentattacktime - self.previousattacktime > 4000:
                 if self.color == GREY:
                     self.color = LIGHTBLUE
-                    self.image.fill(self.color)
+                    self.image = pygame.image.load(os.path.join(image_path, "spike up.png"))
                     #reset the timer
                     self.previousattacktime = self.currentattacktime
                 else:
                 #If they are already active after 4 seconds then switch back to inactive
                     self.color = GREY
-                    self.image.fill(self.color)
+                    self.image = pygame.image.load(os.path.join(image_path, "spike down.png"))
                     #reset the timer
                     self.previousattacktime = self.currentattacktime
             #If the spikes are active then check for player collision
