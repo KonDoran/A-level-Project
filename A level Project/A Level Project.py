@@ -36,6 +36,7 @@ WIDTH = TILESIZE * GRIDWIDTH
 HEIGHT = TILESIZE * GRIDHEIGHT
 #Define the highscore file as highscore.txt
 HS_FILE = "highscore.txt"
+PLAYERSHEET = "BlueKnightSpriteSheet.png"
 #Use os to find the highscore file
 hs_path = os.path.join(current_path, 'highscore')
 #Use os to find the folder called icons to use when showing the start and end points in the pathfinding algorithm
@@ -429,6 +430,8 @@ def gameloop():
                 #Else if this doesn't work then set the highscore to 0
                 self.highscore = 0
                 #print(self.highscore)
+            #load spritesheet
+            self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
         #end method
 
         #Create a method that creates all the objects according to the 2D array in the game class.
@@ -672,7 +675,19 @@ def gameloop():
             pygame.display.flip()
         #end procedure
             
-            
+
+
+
+    class SpriteSheet(object):
+        #Utility class required to pass and load spritesheets
+        def __init__(self, filename):
+            self.spritesheet = pygame.image.load(filename).convert()
+
+        def get_image(self, x, y, width, height):
+            #grab image inside spritesheet
+            image = pygame.Surface([width,height])#
+            image.blit(self.spritesheet, (0,0), (x, y, width, height))
+            return image
             
             
             
