@@ -37,6 +37,7 @@ HEIGHT = TILESIZE * GRIDHEIGHT
 #Define the highscore file as highscore.txt
 HS_FILE = "highscore.txt"
 PLAYERSHEET = "BlueKnightSpriteSheet.png"
+TILESSHEET = "tilessheet.png"
 #Use os to find the highscore file
 hs_path = os.path.join(current_path, 'highscore')
 #Use os to find the folder called icons to use when showing the start and end points in the pathfinding algorithm
@@ -50,9 +51,10 @@ screen_width = 1200
 screen_height = 1000
 screen = pygame.display.set_mode(size)
 #Set the window name to DUNGEON ESCAPE
-pygame.display.set_caption("Dungeon Escape")
-#Define the clock used for what refresh rate the game runs at.
 clock = pygame.time.Clock()
+pygame.display.set_caption("Dungeon Escape"+str(clock.get_fps()))
+#Define the clock used for what refresh rate the game runs at.
+
 
 #The following icons are used for testing only:
 #Load the icon used for the endpoint, start point and path of pathfinding:
@@ -234,10 +236,12 @@ def gameloop():
     #Create A Game class that holds all the Sprite groups and level information
     #Use a game object to establish a game loop that is used to setup the game
     class Game(object):
+        wallspritesheet = 0
         def __init__(self):
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
             self.score = 0
+            Game.wallspritesheet = SpriteSheet(os.path.join(image_path, TILESSHEET))
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
@@ -431,7 +435,7 @@ def gameloop():
                 self.highscore = 0
                 #print(self.highscore)
             #load spritesheet
-            
+        
         #end method
 
         #Create a method that creates all the objects according to the 2D array in the game class.
@@ -462,6 +466,8 @@ def gameloop():
                     #print(i,j)
                     #Check what each character is in every index then create objects according to each character
                     char = self.levels[self.level][j][i]
+                    if char == 0:
+                        pass
                     if char == 1:
                         #Create outside wall object and add it to corresponding Sprite groups and add the coordinates to the wall list
                         self.outsidewall = Wall(RED,40,40,i*40, j*40, i, j)
@@ -684,11 +690,11 @@ def gameloop():
         def __init__(self, filename):
             self.spritesheet = pygame.image.load(filename).convert()
 
-        def get_image(self, x, y, width, height):
+        def get_image(self, x, y, width, height,newwidth, newheight):
             #grab image inside spritesheet
             image = pygame.Surface([width,height])
             image.blit(self.spritesheet, (0,0), (x, y, width, height))
-            image = pygame.transform.scale(image, (50,50))
+            image = pygame.transform.scale(image, (newwidth,newheight))
             return image
             
             
@@ -707,7 +713,7 @@ def gameloop():
             super().__init__()
             #create a sprite
             self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
-            self.image = self.playerspritesheet.get_image(80,1200,80,100)
+            self.image = self.playerspritesheet.get_image(80,1200,80,100,50,50)
             self.image.set_colorkey(BLACK)
             #self.image.fill(color)
             #set the position of the sprite
@@ -1090,8 +1096,8 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = pygame.Surface([width,height])
-            self.image.fill(color)
+            self.image = Game.wallspritesheet.get_image(480,575,32,32,40,40)
+            #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
