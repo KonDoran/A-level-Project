@@ -586,11 +586,12 @@ def gameloop():
         def display(self, screen):
             # background image.
             screen.fill(BLACK)
-            #screen.blit(BACKGROUND_IMAGE,(0,0))
+            screen.blit(BACKGROUND_IMAGE, (0,0))
             if self.game_over:
                 #If the game is over then create a game over screen
                 #First set the screen black
                 screen.fill(BLACK)
+                screen.blit(BACKGROUND_IMAGE, (0,0))
                 #Then draw text of Game over, score and Highscore
                 font1 = pygame.font.Font(None, 74)
                 font2 = pygame.font.Font(None, 48)
@@ -687,7 +688,7 @@ def gameloop():
             #grab image inside spritesheet
             image = pygame.Surface([width,height])
             image.blit(self.spritesheet, (0,0), (x, y, width, height))
-            image = pygame.transform.scale(image, (40,40))
+            image = pygame.transform.scale(image, (50,50))
             return image
             
             
