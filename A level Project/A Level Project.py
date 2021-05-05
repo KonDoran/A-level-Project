@@ -685,8 +685,9 @@ def gameloop():
 
         def get_image(self, x, y, width, height):
             #grab image inside spritesheet
-            image = pygame.Surface([width,height])#
+            image = pygame.Surface([width,height])
             image.blit(self.spritesheet, (0,0), (x, y, width, height))
+            image = pygame.transform.scale(image, (40,40))
             return image
             
             
@@ -706,6 +707,7 @@ def gameloop():
             #create a sprite
             self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
             self.image = self.playerspritesheet.get_image(80,1200,80,100)
+            self.image.set_colorkey(BLACK)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
