@@ -51,10 +51,9 @@ screen_width = 1200
 screen_height = 1000
 screen = pygame.display.set_mode(size)
 #Set the window name to DUNGEON ESCAPE
-clock = pygame.time.Clock()
-pygame.display.set_caption("Dungeon Escape"+str(clock.get_fps()))
+pygame.display.set_caption("Dungeon Escape")
 #Define the clock used for what refresh rate the game runs at.
-
+clock = pygame.time.Clock()
 
 #The following icons are used for testing only:
 #Load the icon used for the endpoint, start point and path of pathfinding:
@@ -713,7 +712,7 @@ def gameloop():
             super().__init__()
             #create a sprite
             self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
-            self.image = self.playerspritesheet.get_image(80,1200,80,100,50,50)
+            self.image = self.playerspritesheet.get_image(82,1200,80,100,40,40)
             self.image.set_colorkey(BLACK)
             #self.image.fill(color)
             #set the position of the sprite
