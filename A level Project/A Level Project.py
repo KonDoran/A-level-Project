@@ -236,11 +236,13 @@ def gameloop():
     #Use a game object to establish a game loop that is used to setup the game
     class Game(object):
         wallspritesheet = 0
+        playerspritesheet = 0
         def __init__(self):
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
             self.score = 0
             Game.wallspritesheet = SpriteSheet(os.path.join(image_path, TILESSHEET))
+            Game.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
@@ -711,8 +713,7 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
-            self.image = self.playerspritesheet.get_image(82,1200,80,100,40,40)
+            self.image = Game.playerspritesheet.get_image(82,1200,80,100,40,40)
             self.image.set_colorkey(BLACK)
             #self.image.fill(color)
             #set the position of the sprite
