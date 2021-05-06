@@ -132,7 +132,7 @@ def game_intro():
         #Set the font and text for the title and center it.
         font = pygame.font.Font('freesansbold.ttf', 84)
         text = font.render(str("DUNGEON ESCAPE"), 1, WHITE)
-        text_rect = text.get_rect(center=(screen_width/2, screen_height/6))
+        text_rect = text.get_rect(center=(screen_width//2, screen_height//6))
         screen.blit(text, text_rect)
         #Draw the buttons for starting the game and quiting
         button_1("START GAME",475,420,250,60,WHITE,GREY,"1")
@@ -988,7 +988,23 @@ def gameloop():
             if self.rect.x < 0:
                 self.kill()
 
-
+    class Ground(pygame.sprite.Sprite):
+        def __init__(self, x, y):
+            super().__init__()
+            self.image = Game.wallspritesheet.get_image(480,575,32,32,40,40)
+            #self.image.fill(color)
+            #set the position of the sprite
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y
+            self.positionx = posx
+            self.positiony = posy
+        #end procedure
+        #No updates needed for wall class
+        def update(self):
+            pass
+        #end procedure
+    
     #Enemy Bullet Class shot from Bow enemy
     class EnemyBullet(pygame.sprite.Sprite):
         def __init__(self, color, speedx, speedy, x, y):
@@ -1116,9 +1132,11 @@ def gameloop():
 
     #Innerwall Class inherits the wall class
     class InnerWall(Wall):
-
-        #Inherits the init method of the wall class
-        pass
+        def __init__(self, color, width, height, x, y, posx, posy):
+            super().__init__(color, width, height, x, y, posx, posy)
+            self.image = Game.wallspritesheet.get_image(1248,64,32,32,40,40)
+        
+        
         #endprocedure
 
         #Update function for the inner wall could be used in the future to make them destructible
