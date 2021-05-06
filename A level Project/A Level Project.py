@@ -237,12 +237,14 @@ def gameloop():
     class Game(object):
         wallspritesheet = 0
         playerspritesheet = 0
+        cratespritesheet = 0
         def __init__(self):
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
             self.score = 0
             Game.wallspritesheet = SpriteSheet(os.path.join(image_path, TILESSHEET))
             Game.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
+            Game.cratespritesheet = SpriteSheet(os.path.join(image_path, "crate.png"))
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
@@ -263,6 +265,7 @@ def gameloop():
             self.chest_group = pygame.sprite.Group()
             self.boss_group = pygame.sprite.Group()
             self.enemybullet_group = pygame.sprite.Group()
+            self.ground_group = pygame.sprite.Group()
             #Call the load data method to be used to find and store high scores
             self.load_data()
             #Create a list of which chests have been unlocked
@@ -467,8 +470,6 @@ def gameloop():
                     #print(i,j)
                     #Check what each character is in every index then create objects according to each character
                     char = self.levels[self.level][j][i]
-                    if char == 0:
-                        pass
                     if char == 1:
                         #Create outside wall object and add it to corresponding Sprite groups and add the coordinates to the wall list
                         self.outsidewall = Wall(RED,40,40,i*40, j*40, i, j)
@@ -513,6 +514,9 @@ def gameloop():
                         self.spike = Spikes(GREY, 40,40,i*40, j*40, i, j)
                         self.all_sprites_group.add(self.spike)
                         self.spike_group.add(self.spike)
+                    
+                    self.ground = Ground(i*40,j*40)
+                    self.ground_group.add(self.ground)
         #end method
 
         #Method to delete each level when the player completes it
@@ -631,6 +635,7 @@ def gameloop():
                 screen.blit(keys, (1050,550))
                 screen.blit(health, (1081, 51))
                 # --- Drawing code for sprites
+                self.ground_group.draw(screen)
                 self.all_sprites_group.draw(screen)
                 self.boss_group.draw(screen)
                 #Check which chest has been unlocked and display text until player moves to next level
@@ -991,14 +996,12 @@ def gameloop():
     class Ground(pygame.sprite.Sprite):
         def __init__(self, x, y):
             super().__init__()
-            self.image = Game.wallspritesheet.get_image(480,575,32,32,40,40)
+            self.image = Game.wallspritesheet.get_image(1248,64,32,32,40,40)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-            self.positionx = posx
-            self.positiony = posy
         #end procedure
         #No updates needed for wall class
         def update(self):
@@ -1134,7 +1137,7 @@ def gameloop():
     class InnerWall(Wall):
         def __init__(self, color, width, height, x, y, posx, posy):
             super().__init__(color, width, height, x, y, posx, posy)
-            self.image = Game.wallspritesheet.get_image(1248,64,32,32,40,40)
+            self.image = Game.cratespritesheet.get_image(0,0,32,32,40,40)
         
         
         #endprocedure
