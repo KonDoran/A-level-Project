@@ -239,6 +239,7 @@ def gameloop():
         playerspritesheet = 0
         cratespritesheet = 0
         doorspritesheet = 0
+        floorspritesheet = 0
         def __init__(self):
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
@@ -247,6 +248,7 @@ def gameloop():
             Game.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
             Game.cratespritesheet = SpriteSheet(os.path.join(image_path, "crate.png"))
             Game.doorspritesheet = SpriteSheet(os.path.join(image_path, "doorsheet.png"))
+            Game.floorspritesheet = SpriteSheet(os.path.join(image_path, "floor.png"))
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
@@ -998,7 +1000,7 @@ def gameloop():
     class Ground(pygame.sprite.Sprite):
         def __init__(self, x, y):
             super().__init__()
-            self.image = Game.wallspritesheet.get_image(1248,64,32,32,40,40)
+            self.image = Game.floorspritesheet.get_image(960,160,32,32,40,40)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
