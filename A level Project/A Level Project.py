@@ -17,11 +17,12 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
-PINK = (255,20,147)
+PINK = (204,102,153)
 PURPLE = (75,0,130)
 BROWN = (150, 75, 0)
 ORANGE = (230,165,0)
 BLUE = (30,144,255)
+PERFECTBLUE = (0,0,255)
 LIGHTBLUE = (173, 216, 240)
 GREY = (180,180,180)
 #use os to find the menu background image in the images folder
@@ -718,7 +719,7 @@ def gameloop():
             super().__init__()
             #create a sprite
             self.image = Game.playerspritesheet.get_image(82,1200,80,100,40,40)
-            self.image.set_colorkey(BLACK)
+            self.image.set_colorkey(GREEN)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
@@ -1118,7 +1119,7 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = Game.wallspritesheet.get_image(480,575,32,32,40,40)
+            self.image = Game.wallspritesheet.get_image(479,576,32,32,40,40)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
