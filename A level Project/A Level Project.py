@@ -1239,7 +1239,7 @@ def gameloop():
         def __init__(self,color, width, height, x, y, level):
             super().__init__()
             self.image = Game.wallspritesheet.get_image(224,0,32,32,40,40)
-            self.image.set_colorkey(BLACK)
+            self.image.set_colorkey(GREEN)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
