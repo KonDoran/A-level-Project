@@ -235,11 +235,6 @@ def gameloop():
     #Create A Game class that holds all the Sprite groups and level information
     #Use a game object to establish a game loop that is used to setup the game
     class Game(object):
-        wallspritesheet = 0
-        playerspritesheet = 0
-        cratespritesheet = 0
-        doorspritesheet = 0
-        floorspritesheet = 0
         def __init__(self):
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
@@ -601,7 +596,7 @@ def gameloop():
         def display(self, screen):
             # background image.
             screen.fill(BLACK)
-            screen.blit(BACKGROUND_IMAGE, (0,0))
+            #screen.blit(BACKGROUND_IMAGE, (0,0))
             if self.game_over:
                 #If the game is over then create a game over screen
                 #First set the screen black
@@ -698,7 +693,7 @@ def gameloop():
     class SpriteSheet(object):
         #Utility class required to pass and load spritesheets
         def __init__(self, filename):
-            self.spritesheet = pygame.image.load(filename).convert()
+            self.spritesheet = pygame.image.load(filename).convert_alpha()
 
         def get_image(self, x, y, width, height,newwidth, newheight):
             #grab image inside spritesheet
@@ -855,22 +850,22 @@ def gameloop():
             keys = pygame.key.get_pressed()
             if keys[pygame.K_a]:
                 #Move the player to the left and change the direction
-                self.changespeed(-4,0)
+                self.changespeed(-2,0)
                 self.directionx = -6
                 self.directiony = 0
             if keys[pygame.K_d]:
                 #move the player to the right and change the direction
-                self.changespeed(4,0)
+                self.changespeed(2,0)
                 self.directionx = 6
                 self.directiony = 0      
             if keys[pygame.K_w]:
                 #move the player up and change the direction
-                self.changespeed(0,-4)
+                self.changespeed(0,-2)
                 self.directionx = 0
                 self.directiony = -6
             if keys[pygame.K_s]:
                 #move the player down and change the direction
-                self.changespeed(0,4)
+                self.changespeed(0,2)
                 self.directionx = 0
                 self.directiony = 6
             if keys[pygame.K_e]:
@@ -1000,7 +995,11 @@ def gameloop():
     class Ground(pygame.sprite.Sprite):
         def __init__(self, x, y):
             super().__init__()
-            self.image = Game.floorspritesheet.get_image(960,160,32,32,40,40)
+            self.id = random.randint(1,2)
+            if self.id == 1:
+                self.image = Game.floorspritesheet.get_image(960,160,32,32,40,40)
+            else:
+                self.image = pygame.transform.rotate(Game.floorspritesheet.get_image(992,160,32,32,40,40), 90*random.randint(0,3))
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
@@ -1230,8 +1229,8 @@ def gameloop():
     class Chest(pygame.sprite.Sprite):
         def __init__(self,color, width, height, x, y, level):
             super().__init__()
-            self.image = pygame.Surface([width,height])
-            self.image.fill(color)
+            self.image = Game.wallspritesheet.get_image(224,0,32,32,40,40)
+            self.image.set_colorkey(BLACK)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
@@ -1278,7 +1277,7 @@ def gameloop():
             #self.start = vec(self.rect.x, self.rect.y)
             #Set timers to attack the player and set the movement speed to 3 pixels per frame
             #self.previouspathtime = pygame.time.get_ticks()
-            self.move = 3
+            self.move = 1
             self.previousdamagetime = pygame.time.get_ticks()
             self.previousattacktime = pygame.time.get_ticks()
         #end procedure
@@ -1390,14 +1389,18 @@ def gameloop():
         #Method to change how the enemy moves when the player is within range of the enemy
         def movetoplayer(self, Player):
             #Compare the player's position to the enemy's position and change the speed of the enemy to move it closer to the player.
-            if Player.rect.x - 10 > self.rect.x:
-                self.speed_x = 2
-            if Player.rect.x - 10 < self.rect.x:
-                self.speed_x = -2
-            if Player.rect.y - 10 > self.rect.y:
-                self.speed_y = 2
-            if Player.rect.y - 10< self.rect.y:
-                self.speed_y = -2
+            if Player.rect.x > self.rect.x:
+                self.speed_x = 1
+            if Player.rect.x < self.rect.x:
+                self.speed_x = -1
+            if Player.rect.y > self.rect.y:
+                self.speed_y = 1
+            if Player.rect.y < self.rect.y:
+                self.speed_y = -1
+            if Player.rect.x == self.rect.x:
+                self.speed_x = 0
+            if Player.rect.y == self.rect.y:
+                self.speed_y = 0
 
              # Move along x axis
             self.rect.x += self.speed_x
@@ -1489,7 +1492,7 @@ def gameloop():
                     yspeed = ydiff * 0.05
                 #Every 1 second an enemy bullet object is created travelling in the direction using the xspeed and yspeed.
                 self.currentattacktime = pygame.time.get_ticks()
-                if self.currentattacktime - self.previousattacktime > 1000:
+                if self.currentattacktime - self.previousattacktime > 2000:
                     game.ebullet = EnemyBullet(RED, xspeed, yspeed, self.rect.x+20, self.rect.y+20)
                     game.all_sprites_group.add(game.ebullet)
                     game.enemybullet_group.add(game.ebullet)
@@ -1687,7 +1690,7 @@ def gameloop():
                 self.movetoplayer(game.player)
                 self.currentattacktime = pygame.time.get_ticks()
                 #Repeat this every second
-                if self.currentattacktime - self.previousattacktime > 1000:
+                if self.currentattacktime - self.previousattacktime > 2500:
                     game.ebullet = EnemyBullet(RED, 3, 0, self.rect.x+80, self.rect.y+80)
                     game.all_sprites_group.add(game.ebullet)
                     game.enemybullet_group.add(game.ebullet)
