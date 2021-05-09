@@ -467,7 +467,7 @@ def gameloop():
             #Search through the 2D array and create objects that corespond to each coordinate that forms the grid.
             for j in range(len(self.levels[self.level])):
                 for i in range(len(self.levels[self.level][j])):
-                    #print(i,j)
+                    print(i,j)
                     #Check what each character is in every index then create objects according to each character
                     char = self.levels[self.level][j][i]
                     if char == 1:
@@ -1155,15 +1155,23 @@ def gameloop():
         def __init__(self, color, width, height, x, y, posx, posy):
             super().__init__()
             #use sprite constructor
-            self.image = pygame.transform.rotate(Game.doorspritesheet.get_image(64,96,16,16,40,40), -90)
+            self.angle = 0
+            self.positionx = posx
+            self.positiony = posy
+            if self.positionx == 0:
+                self.angle = 90
+            elif self.positionx == 24:
+                self.angle = -90
+            self.image = pygame.transform.rotate(Game.doorspritesheet.get_image(64,96,16,16,40,40), self.angle)
             self.image.set_colorkey(ORANGE)
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
             self.rect.y = y
-            self.positionx = posx
-            self.positiony = posy
+            
+            
+            
         #end procedure
 
         #Update function checks what the level is and checks if the level is over before removing the door object
