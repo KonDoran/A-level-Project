@@ -245,6 +245,9 @@ def gameloop():
             Game.cratespritesheet = SpriteSheet(os.path.join(image_path, "crate.png"))
             Game.doorspritesheet = SpriteSheet(os.path.join(image_path, "doorsheet.png"))
             Game.floorspritesheet = SpriteSheet(os.path.join(image_path, "floor.png"))
+            Game.benemyspritesheet = SpriteSheet(os.path.join(image_path, "bow enemy.png"))
+            Game.menemyspritesheet = SpriteSheet(os.path.join(image_path, "menemy.png"))
+            Game.bossspritesheet = SpriteSheet(os.path.join(image_path, "boss enemy.png"))
             #Use an attribute to tell whether the game has finished
             self.game_over = False
             #Set the game level to 0
@@ -1272,8 +1275,8 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = pygame.Surface([width,height])
-            self.image.fill(YELLOW)
+            self.image = Game.menemyspritesheet.get_image(19,21,43,55,40,40)
+            self.image.set_colorkey(GREEN)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
