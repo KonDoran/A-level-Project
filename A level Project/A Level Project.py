@@ -1471,8 +1471,8 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = pygame.Surface([width,height])
-            self.image.fill(ORANGE)
+            self.image = Game.benemyspritesheet.get_image(19,21,43,55,40,40)
+            self.image.set_colorkey(PERFECTBLUE)
             #set the position of the sprite
             self.rect = self.image.get_rect()
             self.rect.x = x
