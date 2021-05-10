@@ -648,6 +648,9 @@ def gameloop():
                 font = pygame.font.Font(None, 24)
                 score = font.render('SCORE:'+str(self.getscore()), 1, WHITE)
                 keys = font.render('KEYS:'+str(self.player.getkeys()), 1, WHITE)
+                move = font.render('TO MOVE')
+                attack1 = font.render('TO SWING SWORD')
+                attack2 = font.render('TO SHOOT FIREBALL')
                 #Draw the player function for the health bar of the player
                 self.player.advanced_health()
                 #Draw the text of the player's health over the health bar
