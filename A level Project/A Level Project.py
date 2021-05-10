@@ -518,7 +518,7 @@ def gameloop():
                     if char == 7:
                         #Create Spike object and add it to corresponding Sprite groups
                         self.spike = Spikes(GREY, 40,40,i*40, j*40, i, j)
-                        self.all_sprites_group.add(self.spike)
+                        #self.all_sprites_group.add(self.spike)
                         self.spike_group.add(self.spike)
                     
                     self.ground = Ground(i*40,j*40)
@@ -566,6 +566,8 @@ def gameloop():
                             self.chest_group.add(self.chest)
                 #print(self.levelcomplete)
                 # Move all the sprites
+                self.sword_group.update()
+                self.spike_group.update()
                 self.all_sprites_group.update()
                 #Check if the player has died
                 if len(self.player_group) == 0:
@@ -641,7 +643,9 @@ def gameloop():
                 screen.blit(keys, (1050,550))
                 screen.blit(health, (1081, 51))
                 # --- Drawing code for sprites
+                self.sword_group.draw(screen)
                 self.ground_group.draw(screen)
+                self.spike_group.draw(screen)
                 self.all_sprites_group.draw(screen)
                 self.boss_group.draw(screen)
                 #Check which chest has been unlocked and display text until player moves to next level
@@ -909,7 +913,7 @@ def gameloop():
                     if self.currentattacktime - self.previousattacktime > 1000:
                         sword = Sword(GREEN, self.swordradius)
                         game.sword_group.add(sword)
-                        game.all_sprites_group.add(sword)
+                        #game.all_sprites_group.add(sword)
                         self.previousattacktime = self.currentattacktime
             #Check if the timer is greater than one to add bullets to the bulletcount
             self.currentbulletaddtime = pygame.time.get_ticks()
