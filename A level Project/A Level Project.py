@@ -263,6 +263,7 @@ def gameloop():
             self.player_group = pygame.sprite.Group()
             self.bullet_group = pygame.sprite.Group()
             self.enemy_group = pygame.sprite.Group()
+            self.menemy_group = pygame.sprite.Group()
             self.key_group = pygame.sprite.Group()
             self.portal_group = pygame.sprite.Group()
             self.door_group = pygame.sprite.Group()
@@ -473,7 +474,7 @@ def gameloop():
             #Search through the 2D array and create objects that corespond to each coordinate that forms the grid.
             for j in range(len(self.levels[self.level])):
                 for i in range(len(self.levels[self.level][j])):
-                    print(i,j)
+                    #print(i,j)
                     #Check what each character is in every index then create objects according to each character
                     char = self.levels[self.level][j][i]
                     if char == 1:
@@ -502,6 +503,7 @@ def gameloop():
                             self.menemy = MeleeEnemy(random.randint(0,10),40,40, i*40, j*40, 40)
                             self.all_sprites_group.add(self.menemy)
                             self.enemy_group.add(self.menemy)
+                            self.menemy_group.add(self.menemy)
                     if char == 5:
                         #Create Boss object and add it to corresponding Sprite groups
                         if self.levelcomplete[self.level] == False:
@@ -530,6 +532,7 @@ def gameloop():
             #Remove all sprites and readd the player
             self.all_sprites_group.empty()
             self.wall_group.empty()
+            self.spike_group.empty()
             self.enemy_group.empty()
             self.all_sprites_group.add(self.player)
             self.all_sprites_group.update()
@@ -1349,7 +1352,7 @@ def gameloop():
             #next
 
             #Check for collision with player.
-            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.enemy_group, False, False)
+            player_hit_group = pygame.sprite.groupcollide(game.player_group, game.menemy_group, False, False)
             for game.player in player_hit_group:
                 #if the player collides with the enemy then subtract 10 health from the player every 2 seconds 
                 self.currentattacktime = pygame.time.get_ticks()
