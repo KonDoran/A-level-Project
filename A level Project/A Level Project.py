@@ -534,6 +534,16 @@ def gameloop():
             self.wall_group.empty()
             self.spike_group.empty()
             self.enemy_group.empty()
+            self.bullet_group.empty()
+            self.menemy_group.empty()
+            self.key_group.empty()
+            self.portal_group.empty()
+            self.door_group.empty()
+            self.sword_group.empty()
+            self.chest_group.empty() 
+            self.boss_group.empty()
+            self.enemybullet_group.empty()
+            self.ground_group.empty()
             self.all_sprites_group.add(self.player)
             self.all_sprites_group.update()
 
@@ -914,7 +924,7 @@ def gameloop():
                     #create a sword with a set radius that lasts for 1 second and add the sword to its sprite groups
                     self.currentattacktime = pygame.time.get_ticks()
                     if self.currentattacktime - self.previousattacktime > 1000:
-                        sword = Sword(GREEN, self.swordradius)
+                        sword = Sword(BLACK, self.swordradius)
                         game.sword_group.add(sword)
                         #game.all_sprites_group.add(sword)
                         self.previousattacktime = self.currentattacktime
@@ -1712,33 +1722,34 @@ def gameloop():
                 self.movetoplayer(game.player)
                 self.currentattacktime = pygame.time.get_ticks()
                 #Repeat this every second
-                if self.currentattacktime - self.previousattacktime > 2500:
-                    game.ebullet = EnemyBullet(RED, 3, 0, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, 3, 3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, 3, -3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, -3, 0, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, -3, 3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, -3, -3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, 0, 3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    game.ebullet = EnemyBullet(RED, 0, -3, self.rect.x+80, self.rect.y+80)
-                    game.all_sprites_group.add(game.ebullet)
-                    game.enemybullet_group.add(game.ebullet)
-                    self.previousattacktime = self.currentattacktime
-                while game.bosscount != 5:
+                if self.currentattacktime - self.previousattacktime > 3500:
+                    if len(game.enemybullet_group) == 0:
+                        game.ebullet = EnemyBullet(RED, 3, 0, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, 3, 3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, 3, -3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, -3, 0, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, -3, 3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, -3, -3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, 0, 3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        game.ebullet = EnemyBullet(RED, 0, -3, self.rect.x+80, self.rect.y+80)
+                        game.all_sprites_group.add(game.ebullet)
+                        game.enemybullet_group.add(game.ebullet)
+                        self.previousattacktime = self.currentattacktime
+                while game.bosscount != 10:
                     #Create 5 melee enemies that randomly spawn in the level
                     xpos = random.randint(1,23)
                     ypos = random.randint(1,23)
@@ -1767,7 +1778,7 @@ def gameloop():
             for game.player in player_hit_group:
                 self.currentattacktime = pygame.time.get_ticks()
                 #if the player collides with the boss then subtract 30 health from the player every 2 seconds 
-                if self.currentattacktime - self.previousattacktime > 2000:
+                if self.currentattacktime - self.previousattacktime > 1000:
                     game.player.getdamage(30)
                     self.previousattacktime = self.currentattacktime
 
