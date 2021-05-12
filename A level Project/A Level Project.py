@@ -770,8 +770,8 @@ def gameloop():
             self.directionx = 0
             self.directiony = 5
             #Set player attribute that are unlocked after opening chests
-            self.canshoot = False
-            self.multishot  = False
+            self.canshoot = True
+            self.multishot  = True
             self.swordradius = 50
             self.bulletcount = 3
             #Set timers to be used for attacks
@@ -1614,7 +1614,7 @@ def gameloop():
             self.current_health = 999
             self.maximum_health = health
             self.health_bar_length = 200
-            self.target_health = 1000
+            self.target_health = 400
             self.health_change_speed = 2
             self.health_bar_color = GREEN
             self.health_ratio = self.maximum_health/ self.health_bar_length
