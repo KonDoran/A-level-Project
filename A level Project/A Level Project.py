@@ -97,8 +97,6 @@ def button_1(message,xpos,ypos,width,height,inactivecolor,activecolor,action1=No
             if action1 == "1":
                 #If the button has action 1 then it will start the gameloop when pressed.
                 gameloop()
-            if action1 == "2":
-                instructions()
             elif action1 == "Q":
                     #if the button has the action Q then exit the window
                     pygame.quit()
@@ -1538,7 +1536,11 @@ def gameloop():
                     self.previousattacktime = self.currentattacktime
             
             #Create a line for testing purposes to be used to check for line of sight. If line of sight is true then the enemy can shoot.
-            #pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
+            line = pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
+            clipped_line = game.outerwall.rect.clipline(line)
+            if clipped_line == True:
+                print("hi")
+
             
             #if the enemy collides with a bullet then subtract 20 health from the enemy.
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
@@ -1616,7 +1618,7 @@ def gameloop():
             self.current_health = 999
             self.maximum_health = health
             self.health_bar_length = 200
-            self.target_health = 1000F
+            self.target_health = 1000
             self.health_change_speed = 2
             self.health_bar_color = GREEN
             self.health_ratio = self.maximum_health/ self.health_bar_length
