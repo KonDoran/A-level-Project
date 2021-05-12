@@ -97,6 +97,8 @@ def button_1(message,xpos,ypos,width,height,inactivecolor,activecolor,action1=No
             if action1 == "1":
                 #If the button has action 1 then it will start the gameloop when pressed.
                 gameloop()
+            if action1 == "2":
+                instructions()
             elif action1 == "Q":
                     #if the button has the action Q then exit the window
                     pygame.quit()
@@ -770,8 +772,8 @@ def gameloop():
             self.directionx = 0
             self.directiony = 5
             #Set player attribute that are unlocked after opening chests
-            self.canshoot = True
-            self.multishot  = True
+            self.canshoot = False
+            self.multishot  = False
             self.swordradius = 50
             self.bulletcount = 3
             #Set timers to be used for attacks
@@ -1614,7 +1616,7 @@ def gameloop():
             self.current_health = 999
             self.maximum_health = health
             self.health_bar_length = 200
-            self.target_health = 400
+            self.target_health = 1000F
             self.health_change_speed = 2
             self.health_bar_color = GREEN
             self.health_ratio = self.maximum_health/ self.health_bar_length
