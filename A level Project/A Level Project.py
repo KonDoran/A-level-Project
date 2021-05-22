@@ -1537,9 +1537,7 @@ def gameloop():
             
             #Create a line for testing purposes to be used to check for line of sight. If line of sight is true then the enemy can shoot.
             line = pygame.draw.line(screen, RED, (game.player.rect.x,game.player.rect.y), (self.rect.x,self.rect.y))
-            clipped_line = game.outerwall.rect.clipline(line)
-            if clipped_line == True:
-                print("hi")
+            
 
             
             #if the enemy collides with a bullet then subtract 20 health from the enemy.
