@@ -1513,8 +1513,8 @@ def gameloop():
             
             if self.is_close() == True:
                 #If player in range then calculate y distance and x distance as well as distance
-                xdiff = (game.player.rect.x-5) - (self.rect.x+20)
-                ydiff = (game.player.rect.y-5) - (self.rect.y+20)
+                xdiff = (game.player.rect.x+15) - (self.rect.x+20)
+                ydiff = (game.player.rect.y+15) - (self.rect.y+20)
                 magnitude = math.hypot(xdiff,ydiff) 
                 #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
                 
@@ -1871,7 +1871,7 @@ def gameloop():
         clock.tick(60)
         
 #Initiate the Menu function to start with the menu
-game_intro()
+game_intro()    
 # Close the window and quits.
 pygame.quit()
 
