@@ -874,6 +874,9 @@ def gameloop():
 
         #Update method for player to control movement and damage taken
         def update(self):
+            if self.speed_x ==0 and self.speed_y == 0:
+                self.image = Game.playerspritesheet.get_image(82,1200,80,100,40,40)
+                self.image.set_colorkey(GREEN)
             #Check for what keys are pressed
             keys = pygame.key.get_pressed()
             if keys[pygame.K_a]:
@@ -881,6 +884,9 @@ def gameloop():
                 self.changespeed(-2,0)
                 self.directionx = -6
                 self.directiony = 0
+                for i in range(0,9):
+                    self.image = Game.playerspritesheet.get_image(90+(94*i),907,94,100,40,40)
+                    self.image.set_colorkey(GREEN)
             if keys[pygame.K_d]:
                 #move the player to the right and change the direction
                 self.changespeed(2,0)
