@@ -745,7 +745,8 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.image = Game.playerspritesheet.get_image(82,1200,80,100,40,40)
+            self.imagearray = [Game.playerspritesheet.get_image(82,1200,80,100,40,40)]
+            self.image = self.imagearray[0]
             self.image.set_colorkey(GREEN)
             #self.image.fill(color)
             #set the position of the sprite
