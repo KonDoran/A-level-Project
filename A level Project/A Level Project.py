@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 import sys
+import numpy as np
 import math
 from collections import deque
 vec = pygame.math.Vector2
@@ -27,7 +28,7 @@ LIGHTBLUE = (173, 216, 240)
 GREY = (180,180,180)
 #use os to find the menu background image in the images folder
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'Menu background.png'))
-#Define constants for grid class for pathfinding:
+#Define constants for grid class for pathfinding:s
 #Define the size of each tile (size of walls/ player)
 TILESIZE = 40
 #Specify how many tiles form the width of the grid and the height of the grid.
@@ -745,9 +746,11 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.imagearray = [Game.playerspritesheet.get_image(82,1200,80,100,40,40)]
-            self.image = self.imagearray[0]
+            self.walkimagearray = [Game.playerspritesheet.get_image(82,1200,80,100,40,40),Game.playerspritesheet.get_image(103,907,80,100,40,40),Game.playerspritesheet.get_image(291,908,87,97,40,40), Game.playerspritesheet.get_image(388,908,88,98,40,40), Game.playerspritesheet.get_image(485,908,90,99,40,40),Game.playerspritesheet.get_image(590,908,82,99,40,40), Game.playerspritesheet.get_image(688,908,81,99,40,40),Game.playerspritesheet.get_image(786,908,80,98,40,40)]
+            self.attackarray = []
+            self.image = self.walkimagearray[0]
             self.image.set_colorkey(GREEN)
+            self.numberarray = 0
             #self.image.fill(color)
             #set the position of the sprite
             self.rect = self.image.get_rect()
@@ -885,9 +888,11 @@ def gameloop():
                 self.changespeed(-2,0)
                 self.directionx = -6
                 self.directiony = 0
-                for i in range(0,9):
-                    self.image = Game.playerspritesheet.get_image(90+(94*i),907,94,100,40,40)
-                    self.image.set_colorkey(GREEN)
+                self.numberarray += 0.2
+                self.image = self.walkimagearray[int(self.numberarray)]
+                self.image.set_colorkey(GREEN)
+                if self.numberarray > 7:
+                    self.numberarray = 0
             if keys[pygame.K_d]:
                 #move the player to the right and change the direction
                 self.changespeed(2,0)
