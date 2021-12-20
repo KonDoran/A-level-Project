@@ -243,6 +243,7 @@ def gameloop():
             self.score = 0
             Game.wallspritesheet = SpriteSheet(os.path.join(image_path, TILESSHEET))
             Game.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
+            Game.invertedplayerspritesheet = SpriteSheet(os.path.join(image_path,"BlueKnightSpriteSheetflipped.png"))
             Game.cratespritesheet = SpriteSheet(os.path.join(image_path, "crate.png"))
             Game.doorspritesheet = SpriteSheet(os.path.join(image_path, "doorsheet.png"))
             Game.floorspritesheet = SpriteSheet(os.path.join(image_path, "floor.png"))
@@ -746,7 +747,7 @@ def gameloop():
             #call sprite constructor
             super().__init__()
             #create a sprite
-            self.walkimagearray = [Game.playerspritesheet.get_image(82,1200,80,100,40,40),Game.playerspritesheet.get_image(103,907,80,100,40,40),Game.playerspritesheet.get_image(291,908,87,97,40,40), Game.playerspritesheet.get_image(388,908,88,98,40,40), Game.playerspritesheet.get_image(485,908,90,99,40,40),Game.playerspritesheet.get_image(590,908,82,99,40,40), Game.playerspritesheet.get_image(688,908,81,99,40,40),Game.playerspritesheet.get_image(786,908,80,98,40,40)]
+            self.walkimagearray = [Game.playerspritesheet.get_image(82,1200,80,100,40,40),Game.playerspritesheet.get_image(103,907,80,100,40,40),Game.playerspritesheet.get_image(291,908,87,97,40,40), Game.playerspritesheet.get_image(388,908,88,98,40,40), Game.playerspritesheet.get_image(485,908,90,99,40,40),Game.playerspritesheet.get_image(590,908,82,99,40,40), Game.playerspritesheet.get_image(688,908,81,99,40,40),Game.playerspritesheet.get_image(786,908,80,98,40,40),Game.invertedplayerspritesheet.get_image(1917,908,80,99,40,40),Game.invertedplayerspritesheet.get_image(1820,908,80,99,40,40),Game.invertedplayerspritesheet.get_image(1723,908,86,97,40,40),]
             self.attackarray = []
             self.image = self.walkimagearray[0]
             self.image.set_colorkey(GREEN)
