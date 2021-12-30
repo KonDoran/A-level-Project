@@ -1526,19 +1526,11 @@ def gameloop():
             
             if self.is_close() == True:
                 #If player in range then calculate y distance and x distance as well as distance
-                xdiff = (game.player.rect.x+15) - (self.rect.x+20)
-                ydiff = (game.player.rect.y+15) - (self.rect.y+20)
-                magnitude = math.hypot(xdiff,ydiff) 
-                #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
-                
-                #self.degrees = math.degrees(self.angle)
-                #If the distance is greater than 60 pixels then change the speed off the bullet
-                if magnitude > 60:
-                    xspeed = xdiff * 0.01
-                    yspeed = ydiff * 0.01
-                else:
-                    xspeed = xdiff * 0.05
-                    yspeed = ydiff * 0.05
+                xdiff = (game.player.rect.x) - (self.rect.x)
+                ydiff = (game.player.rect.y) - (self.rect.y)
+                self.angle = math.atan2(ydiff,xdiff)
+                xspeed = 3 * math.cos(self.angle)
+                yspeed = 3 * math.sin(self.angle)
                 #Every 1 second an enemy bullet object is created travelling in the direction using the xspeed and yspeed.
                 self.currentattacktime = pygame.time.get_ticks()
                 if self.currentattacktime - self.previousattacktime > 2000:
