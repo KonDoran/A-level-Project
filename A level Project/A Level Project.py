@@ -568,6 +568,7 @@ def gameloop():
                 screen.blit(self.hs, self.text_rect)
                 screen.blit(text, text_rect2)
                 screen.blit(score, (520,500))
+                button_1("QUIT",475,590,250,60,WHITE,GREY,"Q")
             if not self.game_over:
                 #When the game is running Display text on the right handside of the screen with the score and keys of the player
                 font = pygame.font.Font(None, 24)
@@ -617,24 +618,9 @@ def gameloop():
                         msg = font3.render('BOSS COMPLETE', 1, BLUE)
                         text_rect = msg.get_rect(center=((screen_width-200)/2, screen_height/6))
                         screen.blit(msg, text_rect)
-
-                #if self.secondchest == True
-                #self.enemy_group.update()
                 #Check if the level is multiple of 5. If true then display the boss health bar.
                 if (self.level + 1) % 5 == 0:
-                    self.boss.advanced_health()
-                #current = self.player.start + self.player.path[vec2int(self.player.start)]
-                #while current != self.player.goal:
-                    #x = current.x * TILESIZE + TILESIZE / 2
-                    #y = current.y * TILESIZE + TILESIZE / 2
-                    #img = arrows[vec2int(self.player.path[(current.x, current.y)])]
-                    #r = img.get_rect(center=(x, y))
-                    #screen.blit(img, r)
-                    # find next in path
-                    #current = current + self.player.path[vec2int(current)]
-                #draw_icons()
-                #self.player.basic_health()
-                
+                    self.boss.advanced_health()               
                 #endif
             # --- Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
