@@ -1326,7 +1326,8 @@ def gameloop():
             #self.start = vec(self.rect.x, self.rect.y)
             #Set timers to attack the player and set the movement speed to 3 pixels per frame
             #self.previouspathtime = pygame.time.get_ticks()
-            self.move = 1
+            self.movex = 1
+            self.movey = 1
             self.previousdamagetime = pygame.time.get_ticks()
             self.previousattacktime = pygame.time.get_ticks()
         #end procedure
@@ -1345,8 +1346,13 @@ def gameloop():
                 #if this is true then use the movetoplayer method to make the enemy move towards the player.
                 self.movetoplayer(game.player)
             #If False then use the move method instead which makes the enmey bounce off walls.
-            elif self.is_close() == False:
+            if self.is_close() == False:
                 self.MOVE()
+                wallcollision = pygame.sprite.spritecollide(self, game.wall_group, False)
+                if wallcollision:
+                    #if there is a collision then reflect the speeds
+                    self.movex = self.movex * -1
+                    self.movey = self.movey * -1
 
             #if the enemy collides with a bullet then subtract 20 health from the enemy.
             enemybullet_hit_group = pygame.sprite.groupcollide(game.enemy_group, game.bullet_group, False, True)
@@ -1407,33 +1413,12 @@ def gameloop():
         def MOVE(self):
             #Using a random number between 1 and 10 and check if it divisible by 2. this provides a 50 50 chance of the enemy bouncing up and down or side to side.
             if self.direction % 2 == 0:
-                self.rect.x += self.move
+                self.movey = 0
+                self.rect.x += self.movex
                 #If divisible by 2 then move to the right by 3 pixels.
-                wallcollision = pygame.sprite.groupcollide(game.enemy_group,game.wall_group, False,False)
-                for wall in wallcollision:
-                    #if it collides to the left of a wall then bounce of the wall and move in the opposite direction
-                    if self.move > 0:
-                        self.rect.right = wall.rect.left
-                        self.move = self.move * -1
-                    else:
-                        #if it collides to the left of a wall then bounce of the wall and move in the opposite direction
-                        self.rect.left = wall.rect.right    
-                        self.move = self.move * -1
-            #move the player up and down the screen
             else:
-                self.rect.y += self.move
-                #check for collision
-                wallcollision = pygame.sprite.groupcollide(game.enemy_group, game.wall_group, False, False) 
-                for wall in wallcollision:
-                    #if there is a collision while moving up then set the speed to 0
-                    if self.move > 0: 
-                        #if it collides with the top of the wall then reflect the speed and bounce of the wall
-                        self.rect.bottom = wall.rect.top
-                        self.move = self.move * -1
-                    else:
-                        #if it collides with the bottom of the wall then reflect the speed and bounce of the wall
-                        self.rect.top = wall.rect.bottom
-                        self.move = self.move * -1
+                self.movex = 0
+                self.rect.y += self.movey
 
         #Method to change how the enemy moves when the player is within range of the enemy
         def movetoplayer(self, Player):
