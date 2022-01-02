@@ -56,24 +56,6 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Dungeon Escape")
 #Define the clock used for what refresh rate the game runs at.
 clock = pygame.time.Clock()
-
-#The following icons are used for testing only:
-#Load the icon used for the endpoint, start point and path of pathfinding:
-home_img = pygame.image.load(os.path.join(icon_dir, 'home.png')).convert_alpha()
-home_img = pygame.transform.scale(home_img, (50, 50))
-home_img.fill((0, 255, 0, 255), special_flags=pygame.BLEND_RGBA_MULT)
-cross_img = pygame.image.load(os.path.join(icon_dir, 'cross.png')).convert_alpha()
-cross_img = pygame.transform.scale(cross_img, (50, 50))
-cross_img.fill((255, 0, 0, 255), special_flags=pygame.BLEND_RGBA_MULT)
-arrows = {}
-arrow_img = pygame.image.load(os.path.join(icon_dir, 'arrowRight.png')).convert_alpha()
-arrow_img = pygame.transform.scale(arrow_img, (50, 50))
-for dir in [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
-    arrows[dir] = pygame.transform.rotate(arrow_img, vec(dir).angle_to(vec(1, 0)))
-#next dir
-
-
-
 #Create a function used to format text used in buttons
 def text_objects(text,font):
     #Render the text input as white and return the position of the surface.
@@ -147,31 +129,6 @@ def game_intro():
 
 
 
-#Create a function to convert a vector into two integers
-def vec2int(v):
-    return (int(v.x), int(v.y))
-    
-#Create a Pathfinding function that uses the graph class and finds the shortest path from start to end.
-def breadth_first_search(graph, start, end):
-    #Create a queue to add nodes to and start the search
-    frontier = deque()
-    #Add nodes to the queue
-    frontier.append(start)
-    path = {}
-    #Create a recursive search until the shortest path is found
-    path[vec2int(start)] = None
-    while len(frontier) > 0:
-        current = frontier.popleft()
-        if current == end:
-            break
-        for next in graph.find_neighbors(current):
-            if vec2int(next) not in path:
-                frontier.append(next)
-                path[vec2int(next)] = current - next
-    #Return the shortest path
-    return path
-
-
 
 
 #Create a game loop function that is called after the Menu
@@ -199,41 +156,6 @@ def gameloop():
 
 
 
-    #Create the Grid Class for pathfinding algorithm
-    class SquareGrid:
-        #Set attributes when object is created
-        def __init__(self, width, height):
-            self.width = width
-            self.height = height
-            self.walls = []
-            self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
-            # comment/uncomment this for diagonals:
-            # self.connections += [vec(1, 1), vec(-1, 1), vec(1, -1), vec(-1, -1)]
-        #end method
-
-        #Method to set the bounds of the grid
-        def in_bounds(self, node):
-            return 0 <= node.x < self.width and 0 <= node.y < self.height
-        #end method
-        
-        #Method that uses wall list to find which nodes can be used
-        def passable(self, node):
-            return node not in self.walls
-        #end method
-
-        #Method to find nodes next to other nodes
-        def find_neighbors(self, node):
-            neighbors = [node + connection for connection in self.connections]
-            # don't use this for diagonals:
-            if (node.x + node.y) % 2:
-                neighbors.reverse()
-            neighbors = filter(self.in_bounds, neighbors)
-            neighbors = filter(self.passable, neighbors)
-            return neighbors
-        #end method
-
-
-
     #Create A Game class that holds all the Sprite groups and level information
     #Use a game object to establish a game loop that is used to setup the game
     class Game(object):
@@ -241,6 +163,7 @@ def gameloop():
             #Define all the atributes of the Game class
             #Set the Score of the game to 0
             self.score = 0
+            #define spritesheets in game class as attributes
             Game.wallspritesheet = SpriteSheet(os.path.join(image_path, TILESSHEET))
             Game.playerspritesheet = SpriteSheet(os.path.join(image_path, PLAYERSHEET))
             Game.invertedplayerspritesheet = SpriteSheet(os.path.join(image_path,"BlueKnightSpriteSheetflipped.png"))
@@ -485,14 +408,14 @@ def gameloop():
                         self.all_sprites_group.add(self.outsidewall)
                         self.wall_group.add(self.outsidewall)
                         self.outsidewall_group.add(self.outsidewall)
-                        g.walls.append(vec((self.outsidewall.rect.x/40), (self.outsidewall.rect.y/40)))
+                        #g.walls.append(vec((self.outsidewall.rect.x/40), (self.outsidewall.rect.y/40)))
                     if char == 2:
                         #Create inner object and add it to corresponding Sprite groups and add the coordinates to the wall list
                         self.innerwall = InnerWall(RED,40,40,i*40, j*40, i, j)
                         self.all_sprites_group.add(self.innerwall)
                         self.wall_group.add(self.innerwall)
                         self.innerwall_group.add(self.innerwall)
-                        g.walls.append(vec((self.innerwall.rect.x/40), (self.innerwall.rect.y/40)))
+                        #g.walls.append(vec((self.innerwall.rect.x/40), (self.innerwall.rect.y/40)))
                     if char == 3:
                         #Create Bow enemy object and add it to corresponding Sprite groups
                         if self.levelcomplete[self.level] == False:
@@ -1692,19 +1615,11 @@ def gameloop():
                 #move towards the player and shoot projectiles
                 #Calculate y distance and x distance as well as distance
                 self.movetoplayer(game.player)
-                xdiff = (game.player.rect.x-5) - (self.rect.x+80)
-                ydiff = (game.player.rect.y-5) - (self.rect.y+80)
-                magnitude = math.hypot(xdiff,ydiff) 
-                #self.angle = (180 / math.pi) * -math.atan2(ydiff, xdiff) - 90
-                
-                #self.degrees = math.degrees(self.angle)
-                #If the distance is greater than 60 pixels then change the speed off the bullet
-                if magnitude > 60:
-                    xspeed = xdiff * 0.01
-                    yspeed = ydiff * 0.01
-                else:
-                    xspeed = xdiff * 0.05
-                    yspeed = ydiff * 0.05
+                xdiff = (game.player.rect.x) - (self.rect.x+80)
+                ydiff = (game.player.rect.y) - (self.rect.y+80)
+                self.angle = math.atan2(ydiff,xdiff)
+                xspeed = 3 * math.cos(self.angle)
+                yspeed = 3 * math.sin(self.angle)
                 #Every 1 second an enemy bullet object is created travelling in the direction using the xspeed and yspeed.
                 self.currentattacktime = pygame.time.get_ticks()
                 if self.currentattacktime - self.previousattacktime > 1500:
@@ -1830,8 +1745,6 @@ def gameloop():
 
 
 
-    #Create an instance of the Grid class to be used for calculations
-    g = SquareGrid(GRIDWIDTH, GRIDHEIGHT)
     #Create an instance of the Game class used for the game loop
     game = Game()
     
