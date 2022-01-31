@@ -632,6 +632,7 @@ def gameloop():
     class SpriteSheet(object):
         #Utility class required to pass and load spritesheets
         def __init__(self, filename):
+            #image loaded has transparent background removed
             self.spritesheet = pygame.image.load(filename).convert_alpha()
 
         def get_image(self, x, y, width, height,newwidth, newheight):
