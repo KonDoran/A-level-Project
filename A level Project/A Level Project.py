@@ -474,6 +474,7 @@ def gameloop():
             self.ground_group.empty()
             self.all_sprites_group.add(self.player)
             self.all_sprites_group.update()
+            self.score += 500
 
         #endprocess
         #Method used to check for event if they quit
@@ -800,7 +801,7 @@ def gameloop():
             if keys[pygame.K_a]:
                 #Move the player to the left and change the direction
                 self.changespeed(-2,0)
-                self.directionx = -1
+                self.directionx = -4
                 self.directiony = 0
                 self.numberarray += 0.2
                 self.image = self.walkimagearray[int(self.numberarray)]
@@ -810,18 +811,18 @@ def gameloop():
             if keys[pygame.K_d]:
                 #move the player to the right and change the direction
                 self.changespeed(2,0)
-                self.directionx = 1
+                self.directionx = 4
                 self.directiony = 0      
             if keys[pygame.K_w]:
                 #move the player up and change the direction
                 self.changespeed(0,-2)
                 self.directionx = 0
-                self.directiony = -1
+                self.directiony = -4
             if keys[pygame.K_s]:
                 #move the player down and change the direction
                 self.changespeed(0,2)
                 self.directionx = 0
-                self.directiony = 1
+                self.directiony = 4
             if keys[pygame.K_e]:
                 #When the E key is pressed and bullet shooting is unlocked then create a fireball that travel in the direction set by the player from the previous key pressed
                 if self.canshoot == True:
@@ -1427,8 +1428,8 @@ def gameloop():
                 xdiff = (game.player.rect.x) - (self.rect.x)
                 ydiff = (game.player.rect.y) - (self.rect.y)
                 self.angle = math.atan2(ydiff,xdiff)
-                xspeed = 1 * math.cos(self.angle)
-                yspeed = 1 * math.sin(self.angle)
+                xspeed = 3 * math.cos(self.angle)
+                yspeed = 3 * math.sin(self.angle)
                 #Every 1 second an enemy bullet object is created travelling in the direction using the xspeed and yspeed.
                 self.currentattacktime = pygame.time.get_ticks()
                 if self.currentattacktime - self.previousattacktime > 2000:
