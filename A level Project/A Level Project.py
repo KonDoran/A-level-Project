@@ -146,7 +146,7 @@ def game_instruct():
         screen.blit(BACKGROUND_IMAGE, [0,0])
         #Set the font and text for the title and center it.
         font = pygame.font.Font('freesansbold.ttf', 84)
-        text = font.render(str("Instructions"), 1, WHITE)
+        text = font.render(str("INSTRUCTIONS"), 1, WHITE)
         text_rect = text.get_rect(center=(screen_width//2, screen_height//6))
         screen.blit(text, text_rect)
         #Draw the buttons for starting the game and quiting
