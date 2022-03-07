@@ -81,8 +81,10 @@ def button_1(message,xpos,ypos,width,height,inactivecolor,activecolor,action1=No
                 #If the button has action 1 then it will start the gameloop when pressed.
                 gameloop()
             elif action1 == "Q":
-                    #if the button has the action Q then exit the window
-                    pygame.quit()
+                #if the button has the action Q then exit the window
+                exit()
+            elif action1 == "I":
+                game_instruct()
     else:
         #When the button is not hovered over by the mouse then draw the button with it's active colour
         pygame.draw.rect(screen, activecolor,(xpos,ypos,width,height),5)
@@ -120,13 +122,41 @@ def game_intro():
         screen.blit(text, text_rect)
         #Draw the buttons for starting the game and quiting
         button_1("START GAME",475,420,250,60,WHITE,GREY,"1")
-        button_1("QUIT",475,490,250,60,WHITE,GREY,"Q")
+        button_1("Instructions",475,490,250,60,WHITE,GREY,"I")
+        button_1("QUIT",475,560,250,60,WHITE,GREY,"Q")
         #Display the image in the window
         pygame.display.flip()
         #Refresh at 60Hz
         clock.tick(60)
 #end procedure
 
+def game_instruct():
+    running = True
+    while running:
+        for event in pygame.event.get(): # User did something
+            if event.type == pygame.QUIT: # If user clicked close
+                running = False # Flag that we are done so we exit this loop and quit the game
+            elif event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_ESCAPE: 
+                            running=False
+                            
+    #Drawing the menu screen
+        screen.fill(BLACK)
+        #Draw the Background image for the background
+        screen.blit(BACKGROUND_IMAGE, [0,0])
+        #Set the font and text for the title and center it.
+        font = pygame.font.Font('freesansbold.ttf', 84)
+        text = font.render(str("Instructions"), 1, WHITE)
+        text_rect = text.get_rect(center=(screen_width//2, screen_height//6))
+        screen.blit(text, text_rect)
+        #Draw the buttons for starting the game and quiting
+        button_1("START GAME",475,720,250,60,WHITE,GREY,"1")
+        button_1("QUIT",475,790,250,60,WHITE,GREY,"Q")
+        #Display the image in the window
+        pygame.display.flip()
+        #Refresh at 60Hz
+        clock.tick(60)
+#end procedure
 
 
 
