@@ -28,6 +28,7 @@ LIGHTBLUE = (173, 216, 240)
 GREY = (180,180,180)
 #use os to find the menu background image in the images folder
 BACKGROUND_IMAGE = pygame.image.load(os.path.join(image_path, 'Menu background.png'))
+INSTRUCT_IMG = pygame.image.load(os.path.join(image_path, 'Instructions.png'))
 #Define constants for grid class for pathfinding:s
 #Define the size of each tile (size of walls/ player)
 TILESIZE = 40
@@ -144,6 +145,7 @@ def game_instruct():
         screen.fill(BLACK)
         #Draw the Background image for the background
         screen.blit(BACKGROUND_IMAGE, [0,0])
+        screen.blit(INSTRUCT_IMG, [250,225])
         #Set the font and text for the title and center it.
         font = pygame.font.Font('freesansbold.ttf', 84)
         text = font.render(str("INSTRUCTIONS"), 1, WHITE)
